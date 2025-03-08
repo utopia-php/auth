@@ -3,7 +3,6 @@
 namespace Utopia\Tests\Auth\Proofs;
 
 use PHPUnit\Framework\TestCase;
-use Utopia\Auth\Algorithms\Bcrypt;
 use Utopia\Auth\Proofs\Phrase;
 
 class PhraseTest extends TestCase

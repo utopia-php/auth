@@ -62,7 +62,7 @@ class Sha extends Algorithm
         }
 
         $this->setOption('version', $version);
-        
+
         return $this;
     }
 
@@ -72,9 +72,10 @@ class Sha extends Algorithm
     public function hash(string $value): string
     {
         $version = $this->getOption('version');
-        if (!is_string($version)) {
+        if (! is_string($version)) {
             throw new \RuntimeException('SHA version must be a string');
         }
+
         return \hash($version, $value);
     }
 

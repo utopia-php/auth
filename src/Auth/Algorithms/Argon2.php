@@ -47,6 +47,7 @@ class Argon2 extends Algorithm
         }
 
         $this->setOption('memory_cost', $cost);
+
         return $this;
     }
 
@@ -65,6 +66,7 @@ class Argon2 extends Algorithm
         }
 
         $this->setOption('time_cost', $cost);
+
         return $this;
     }
 
@@ -83,6 +85,7 @@ class Argon2 extends Algorithm
         }
 
         $this->setOption('threads', $threads);
+
         return $this;
     }
 }

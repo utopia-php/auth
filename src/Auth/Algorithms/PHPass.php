@@ -237,6 +237,7 @@ class PHPass extends Algorithm
         }
 
         $this->setOption('iteration_count_log2', $count);
+
         return $this;
     }
 
@@ -249,6 +250,7 @@ class PHPass extends Algorithm
     public function setPortableHashes(bool $portable): PHPass
     {
         $this->setOption('portable_hashes', $portable);
+
         return $this;
     }
 }

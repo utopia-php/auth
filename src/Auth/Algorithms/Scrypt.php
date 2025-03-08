@@ -23,10 +23,10 @@ class Scrypt extends Algorithm
      */
     public function hash(string $value): string
     {
-        if (!function_exists('scrypt')) {
+        if (! function_exists('scrypt')) {
             throw new \RuntimeException('The scrypt extension is required. Please install php-scrypt.');
         }
-        
+
         return \scrypt(
             $value,
             $this->getOption('salt'),
@@ -60,6 +60,7 @@ class Scrypt extends Algorithm
         }
 
         $this->setOption('costCpu', $cost);
+
         return $this;
     }
 
@@ -78,6 +79,7 @@ class Scrypt extends Algorithm
         }
 
         $this->setOption('costMemory', $cost);
+
         return $this;
     }
 
@@ -96,6 +98,7 @@ class Scrypt extends Algorithm
         }
 
         $this->setOption('costParallel', $cost);
+
         return $this;
     }
 
@@ -114,6 +117,7 @@ class Scrypt extends Algorithm
         }
 
         $this->setOption('length', $length);
+
         return $this;
     }
 
@@ -132,6 +136,7 @@ class Scrypt extends Algorithm
         }
 
         $this->setOption('salt', $salt);
+
         return $this;
     }
 }

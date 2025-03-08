@@ -28,11 +28,11 @@ class ScryptModified extends Algorithm
     public function hash(string $value): string
     {
         $options = $this->getOptions();
-        
-        if (!is_string($options['signerKey'])) {
+
+        if (! is_string($options['signerKey'])) {
             throw new \InvalidArgumentException('Signer key must be a string');
         }
-        
+
         $derivedKeyBytes = $this->generateDerivedKey($value);
         $signerKeyBytes = \base64_decode($options['signerKey']);
 
@@ -54,16 +54,16 @@ class ScryptModified extends Algorithm
      */
     private function generateDerivedKey(string $value): string
     {
-        if (!function_exists('scrypt')) {
+        if (! function_exists('scrypt')) {
             throw new \RuntimeException('The scrypt extension is required. Please install php-scrypt.');
         }
 
         $options = $this->getOptions();
-        
-        if (!is_string($options['salt']) || !is_string($options['saltSeparator'])) {
+
+        if (! is_string($options['salt']) || ! is_string($options['saltSeparator'])) {
             throw new \InvalidArgumentException('Salt and salt separator must be strings');
         }
-        
+
         $saltBytes = \base64_decode($options['salt']);
         $saltSeparatorBytes = \base64_decode($options['saltSeparator']);
 
@@ -85,7 +85,7 @@ class ScryptModified extends Algorithm
      */
     private function hashKeys(string $signerKeyBytes, string $derivedKeyBytes): string
     {
-        if (!is_string($signerKeyBytes)) {
+        if (! is_string($signerKeyBytes)) {
             throw new \InvalidArgumentException('Signer key must be a string');
         }
 

@@ -15,11 +15,17 @@ use Utopia\Auth\Proof;
 class Password extends Proof
 {
     public const ARGON2 = 'argon2';
+
     public const BCRYPT = 'bcrypt';
+
     public const SCRYPT = 'scrypt';
+
     public const SCRYPT_MODIFIED = 'scrypt-modified';
+
     public const SHA = 'sha';
+
     public const MD5 = 'md5';
+
     public const PHPASS = 'phpass';
 
     /**
@@ -154,7 +160,7 @@ class Password extends Proof
     {
         $password = '';
         $max = strlen($this->defaultCharset) - 1;
-        
+
         if ($max < 0) {
             throw new \Exception('Password charset is empty');
         }

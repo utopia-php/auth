@@ -12,8 +12,8 @@ abstract class Algorithm
     /**
      * Set algorithm options
      *
-     * @param string $key The option key to set
-     * @param mixed $value The value to set for the option
+     * @param  string  $key The option key to set
+     * @param  mixed  $value The value to set for the option
      * @return self
      */
     protected function setOption(string $key, mixed $value): self

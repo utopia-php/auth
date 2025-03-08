@@ -7,21 +7,13 @@ use Utopia\Auth\Algorithm;
 class Sha extends Algorithm
 {
     public const SHA1 = 'sha1';
-
     public const SHA224 = 'sha224';
-
     public const SHA256 = 'sha256';
-
     public const SHA384 = 'sha384';
-
     public const SHA512 = 'sha512';
-
     public const SHA3_224 = 'sha3-224';
-
     public const SHA3_256 = 'sha3-256';
-
     public const SHA3_384 = 'sha3-384';
-
     public const SHA3_512 = 'sha3-512';
 
     /**

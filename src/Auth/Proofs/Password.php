@@ -56,6 +56,11 @@ class Password extends Proof
         }
 
         $this->algorithms = $algorithms;
+
+        // Set the first algorithm as the default one
+        if (!empty($algorithms)) {
+            $this->algorithm = reset($algorithms);
+        }
     }
 
     /**

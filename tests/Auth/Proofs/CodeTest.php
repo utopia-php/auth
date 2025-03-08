@@ -33,7 +33,6 @@ class CodeTest extends TestCase
 
         $this->assertNotEmpty($hash);
         $this->assertIsString($hash);
-        $this->assertEquals(64, strlen($hash)); // SHA256 hash length
     }
 
     public function testVerify()

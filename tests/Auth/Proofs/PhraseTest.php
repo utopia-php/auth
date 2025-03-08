@@ -34,7 +34,7 @@ class PhraseTest extends TestCase
 
         $this->assertNotEmpty($hash);
         $this->assertIsString($hash);
-        $this->assertStringStartsWith('$2y$', $hash);
+        $this->assertStringStartsWith('$argon2id$', $hash);
     }
 
     public function testVerify()

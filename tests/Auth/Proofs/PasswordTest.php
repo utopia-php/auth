@@ -93,7 +93,7 @@ class PasswordTest extends TestCase
     {
         // First try to remove the current algorithm (should fail)
         $this->expectException(\Exception::class);
-        $this->password->removeAlgorithm(Password::ARGON2);
+        $this->password->removeAlgorithm(Password::ARGON2); // Argon2 is the default current algorithm
     }
 
     public function testRemoveNonCurrentAlgorithm()
@@ -129,7 +129,8 @@ class PasswordTest extends TestCase
         ];
 
         foreach ($algorithms as $algo) {
-            $this->password->setDefaultAlgorithm($algo);
+            $algorithm = $this->password->getAlgorithmByName($algo);
+            $this->password->setAlgorithm($algorithm);
             $hash = $this->password->hash($proof);
             $this->assertTrue($this->password->verify($proof, $hash), "Algorithm {$algo} failed verification");
             $this->assertFalse($this->password->verify('wrongpassword', $hash), "Algorithm {$algo} failed wrong password test");

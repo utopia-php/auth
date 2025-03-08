@@ -4,6 +4,7 @@ namespace Utopia\Tests\Auth\Proofs;
 
 use PHPUnit\Framework\TestCase;
 use Utopia\Auth\Proofs\Token;
+use Utopia\Auth\Algorithms\Sha;
 
 class TokenTest extends TestCase
 {
@@ -12,6 +13,8 @@ class TokenTest extends TestCase
     protected function setUp(): void
     {
         $this->token = new Token(32);
+        $this->token->setAlgorithm(new Sha());
+        $this->token->getAlgorithm()->setVersion('sha256');
     }
 
     public function testGenerate()

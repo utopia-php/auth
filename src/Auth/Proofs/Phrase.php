@@ -32,27 +32,4 @@ class Phrase extends Proof
 
         return "{$adjective} {$noun}";
     }
-
-    /**
-     * Hash a proof
-     *
-     * @param  string  $proof
-     * @return string
-     */
-    public function hash(string $proof): string
-    {
-        return $this->algorithm->hash($proof);
-    }
-
-    /**
-     * Verify a proof
-     *
-     * @param  string  $proof
-     * @param  string  $hash
-     * @return bool
-     */
-    public function verify(string $proof, string $hash): bool
-    {
-        return $this->algorithm->verify($proof, $hash);
-    }
 }

@@ -39,22 +39,6 @@ class Token extends Proof
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function hash(string $proof): string
-    {
-        return $this->algorithm->hash($proof);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function verify(string $proof, string $hash): bool
-    {
-        return $this->algorithm->verify($proof, $hash);
-    }
-
-    /**
      * Get the token length
      *
      * @return int

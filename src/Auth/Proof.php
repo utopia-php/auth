@@ -52,7 +52,10 @@ abstract class Proof
      * @param  string  $proof
      * @return string
      */
-    abstract public function hash(string $proof): string;
+    public function hash(string $proof): string
+    {
+        return $this->algorithm->hash($proof);
+    }
 
     /**
      * Verify a proof
@@ -61,5 +64,8 @@ abstract class Proof
      * @param  string  $hash
      * @return bool
      */
-    abstract public function verify(string $proof, string $hash): bool;
+    public function verify(string $proof, string $hash): bool
+    {
+        return $this->algorithm->verify($proof, $hash);
+    }
 }

@@ -13,7 +13,6 @@ class PhraseTest extends TestCase
     protected function setUp(): void
     {
         $this->phrase = new Phrase();
-        $this->phrase->setAlgorithm(new Bcrypt());
     }
 
     public function testGenerate(): void

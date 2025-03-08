@@ -28,6 +28,11 @@ class ScryptModified extends Algorithm
     public function hash(string $value): string
     {
         $options = $this->getOptions();
+        
+        if (!is_string($options['signerKey'])) {
+            throw new \InvalidArgumentException('Signer key must be a string');
+        }
+        
         $derivedKeyBytes = $this->generateDerivedKey($value);
         $signerKeyBytes = \base64_decode($options['signerKey']);
 
@@ -44,28 +49,55 @@ class ScryptModified extends Algorithm
 
     /**
      * Generate derived key using scrypt
+     *
+     * @throws \RuntimeException If scrypt extension is not installed
      */
     private function generateDerivedKey(string $value): string
     {
+        if (!function_exists('scrypt')) {
+            throw new \RuntimeException('The scrypt extension is required. Please install php-scrypt.');
+        }
+
         $options = $this->getOptions();
+        
+        if (!is_string($options['salt']) || !is_string($options['saltSeparator'])) {
+            throw new \InvalidArgumentException('Salt and salt separator must be strings');
+        }
+        
         $saltBytes = \base64_decode($options['salt']);
         $saltSeparatorBytes = \base64_decode($options['saltSeparator']);
 
         $value = \mb_convert_encoding($value, 'UTF-8');
         $derivedKey = \scrypt($value, $saltBytes.$saltSeparatorBytes, 16384, 8, 1, 64);
 
-        return \hex2bin($derivedKey);
+        $result = \hex2bin($derivedKey);
+        if ($result === false) {
+            throw new \RuntimeException('Failed to convert derived key from hex to binary');
+        }
+
+        return $result;
     }
 
     /**
      * Hash keys using AES-256-CTR
+     *
+     * @throws \RuntimeException If encryption fails
      */
     private function hashKeys(string $signerKeyBytes, string $derivedKeyBytes): string
     {
+        if (!is_string($signerKeyBytes)) {
+            throw new \InvalidArgumentException('Signer key must be a string');
+        }
+
         $key = \substr($derivedKeyBytes, 0, 32);
         $iv = "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
-        return \openssl_encrypt($signerKeyBytes, 'aes-256-ctr', $key, OPENSSL_RAW_DATA, $iv);
+        $result = \openssl_encrypt($signerKeyBytes, 'aes-256-ctr', $key, OPENSSL_RAW_DATA, $iv);
+        if ($result === false) {
+            throw new \RuntimeException('Failed to encrypt using AES-256-CTR');
+        }
+
+        return $result;
     }
 
     /**
@@ -86,7 +118,9 @@ class ScryptModified extends Algorithm
             throw new \InvalidArgumentException('Salt must be base64 encoded');
         }
 
-        return $this->setOption('salt', $salt);
+        $this->setOption('salt', $salt);
+
+        return $this;
     }
 
     /**
@@ -103,7 +137,9 @@ class ScryptModified extends Algorithm
             throw new \InvalidArgumentException('Salt separator must be base64 encoded');
         }
 
-        return $this->setOption('saltSeparator', $separator);
+        $this->setOption('saltSeparator', $separator);
+
+        return $this;
     }
 
     /**
@@ -124,6 +160,8 @@ class ScryptModified extends Algorithm
             throw new \InvalidArgumentException('Signer key must be base64 encoded');
         }
 
-        return $this->setOption('signerKey', $key);
+        $this->setOption('signerKey', $key);
+
+        return $this;
     }
 }

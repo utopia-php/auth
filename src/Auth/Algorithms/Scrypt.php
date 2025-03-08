@@ -23,7 +23,10 @@ class Scrypt extends Algorithm
      */
     public function hash(string $value): string
     {
-        // @phpstan-ignore-next-line
+        if (!function_exists('scrypt')) {
+            throw new \RuntimeException('The scrypt extension is required. Please install php-scrypt.');
+        }
+        
         return \scrypt(
             $value,
             $this->getOption('salt'),

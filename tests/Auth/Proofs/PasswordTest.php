@@ -22,12 +22,12 @@ class PasswordTest extends TestCase
 
     protected function setUp(): void
     {
-        // Test legacy constructor with explicit algorithms
-        $this->bcrypt = new Bcrypt();
-        $this->legacyPassword = new Password('bcrypt', ['bcrypt' => $this->bcrypt]);
-
         // Test new constructor with auto-initialized algorithms
         $this->password = new Password();
+
+        // Test legacy constructor with explicit algorithms
+        $this->bcrypt = new Bcrypt();
+        $this->legacyPassword = new Password(['bcrypt' => $this->bcrypt]);
     }
 
     public function testGenerate()
@@ -63,45 +63,56 @@ class PasswordTest extends TestCase
     {
         $newBcrypt = new Bcrypt(['cost' => 8]);
         $this->password->addAlgorithm('bcrypt-8', $newBcrypt);
-        $this->password->setDefaultAlgorithm('bcrypt-8');
 
+        // Verify the algorithm was added
+        $algorithm = $this->password->getAlgorithmByName('bcrypt-8');
+        $this->assertInstanceOf(Bcrypt::class, $algorithm);
+
+        // Test that the algorithm works
         $proof = 'test123';
+        $this->password->setAlgorithm($algorithm);
         $hash = $this->password->hash($proof);
 
         $this->assertTrue($this->password->verify($proof, $hash));
+        $this->assertFalse($this->password->verify('wrongpassword', $hash));
     }
 
     public function testDefaultAlgorithms()
     {
         // Test that all default algorithms are initialized
-        $this->assertInstanceOf(Argon2::class, $this->password->getAlgorithm(Password::ARGON2));
-        $this->assertInstanceOf(Bcrypt::class, $this->password->getAlgorithm(Password::BCRYPT));
-        $this->assertInstanceOf(Scrypt::class, $this->password->getAlgorithm(Password::SCRYPT));
-        $this->assertInstanceOf(ScryptModified::class, $this->password->getAlgorithm(Password::SCRYPT_MODIFIED));
-        $this->assertInstanceOf(Sha::class, $this->password->getAlgorithm(Password::SHA));
-        $this->assertInstanceOf(MD5::class, $this->password->getAlgorithm(Password::MD5));
-        $this->assertInstanceOf(PHPass::class, $this->password->getAlgorithm(Password::PHPASS));
+        $this->assertInstanceOf(Argon2::class, $this->password->getAlgorithmByName(Password::ARGON2));
+        $this->assertInstanceOf(Bcrypt::class, $this->password->getAlgorithmByName(Password::BCRYPT));
+        $this->assertInstanceOf(Scrypt::class, $this->password->getAlgorithmByName(Password::SCRYPT));
+        $this->assertInstanceOf(ScryptModified::class, $this->password->getAlgorithmByName(Password::SCRYPT_MODIFIED));
+        $this->assertInstanceOf(Sha::class, $this->password->getAlgorithmByName(Password::SHA));
+        $this->assertInstanceOf(MD5::class, $this->password->getAlgorithmByName(Password::MD5));
+        $this->assertInstanceOf(PHPass::class, $this->password->getAlgorithmByName(Password::PHPASS));
     }
 
     public function testRemoveAlgorithm()
     {
+        // First try to remove the current algorithm (should fail)
         $this->expectException(\Exception::class);
-        $this->password->removeAlgorithm(Password::ARGON2); // Should throw as it's the default
+        $this->password->removeAlgorithm(Password::ARGON2);
+    }
 
-        $this->password->setDefaultAlgorithm(Password::BCRYPT);
-        $this->password->removeAlgorithm(Password::ARGON2); // Should work now
+    public function testRemoveNonCurrentAlgorithm()
+    {
+        // Should be able to remove a non-current algorithm
+        $this->password->removeAlgorithm(Password::MD5);
 
+        // Verify it was removed
         $this->expectException(\Exception::class);
-        $this->password->getAlgorithm(Password::ARGON2); // Should throw as algorithm was removed
+        $this->password->getAlgorithmByName(Password::MD5);
     }
 
     public function testGetAlgorithm()
     {
-        $algorithm = $this->password->getAlgorithm(Password::BCRYPT);
+        $algorithm = $this->password->getAlgorithmByName(Password::BCRYPT);
         $this->assertInstanceOf(Bcrypt::class, $algorithm);
 
         $this->expectException(\Exception::class);
-        $this->password->getAlgorithm('non-existent-algorithm');
+        $this->password->getAlgorithmByName('non-existent-algorithm');
     }
 
     public function testAllAlgorithmsWork()
@@ -134,5 +145,9 @@ class PasswordTest extends TestCase
         $this->assertIsString($hash);
         $this->assertStringStartsWith('$2y$', $hash);
         $this->assertTrue($this->legacyPassword->verify($proof, $hash));
+
+        // Verify that only the specified algorithm is available
+        $this->expectException(\Exception::class);
+        $this->legacyPassword->getAlgorithmByName(Password::ARGON2);
     }
 }

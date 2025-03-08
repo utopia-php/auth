@@ -34,18 +34,14 @@ class Password extends Proof
     protected array $algorithms = [];
 
     /**
-     * @var string
-     */
-    protected string $default;
-
-    /**
-     * @param  string  $defaultAlgorithm
      * @param  array<string, Algorithm>  $algorithms
      *
      * @throws \Exception
      */
-    public function __construct(string $default = 'argon2', array $algorithms = [])
+    public function __construct(array $algorithms = [])
     {
+        parent::__construct();
+        
         // Initialize default algorithms if none provided
         if (empty($algorithms)) {
             $algorithms = [
@@ -60,12 +56,6 @@ class Password extends Proof
         }
 
         $this->algorithms = $algorithms;
-
-        if (! isset($this->algorithms[$default])) {
-            throw new \Exception("Default algorithm '{$default}' not found in provided algorithms");
-        }
-
-        $this->default = $default;
     }
 
     /**
@@ -78,25 +68,6 @@ class Password extends Proof
     public function addAlgorithm(string $name, Algorithm $algorithm): self
     {
         $this->algorithms[$name] = $algorithm;
-
-        return $this;
-    }
-
-    /**
-     * Set default algorithm
-     *
-     * @param  string  $name
-     * @return self
-     *
-     * @throws \Exception
-     */
-    public function setDefaultAlgorithm(string $name): self
-    {
-        if (! isset($this->algorithms[$name])) {
-            throw new \Exception("Algorithm '{$name}' not found");
-        }
-
-        $this->default = $name;
 
         return $this;
     }
@@ -115,8 +86,8 @@ class Password extends Proof
             throw new \Exception("Algorithm '{$name}' not found");
         }
 
-        if ($name === $this->default) {
-            throw new \Exception('Cannot remove default algorithm');
+        if ($this->algorithm === $this->algorithms[$name]) {
+            throw new \Exception('Cannot remove current algorithm');
         }
 
         unset($this->algorithms[$name]);
@@ -125,14 +96,14 @@ class Password extends Proof
     }
 
     /**
-     * Get a hashing algorithm
+     * Get a specific hashing algorithm by name
      *
      * @param  string  $name
      * @return Algorithm
      *
      * @throws \Exception
      */
-    public function getAlgorithm(string $name): Algorithm
+    public function getAlgorithmByName(string $name): Algorithm
     {
         if (! isset($this->algorithms[$name])) {
             throw new \Exception("Algorithm '{$name}' not found");
@@ -154,11 +125,7 @@ class Password extends Proof
      */
     public function hash(string $proof): string
     {
-        if (! isset($this->algorithms[$this->default])) {
-            throw new \Exception('No algorithms configured');
-        }
-
-        return $this->algorithms[$this->default]->hash($proof);
+        return $this->algorithm->hash($proof);
     }
 
     /**
@@ -166,10 +133,6 @@ class Password extends Proof
      */
     public function verify(string $proof, string $hash): bool
     {
-        if (! isset($this->algorithms[$this->default])) {
-            throw new \Exception('No algorithms configured');
-        }
-
-        return $this->algorithms[$this->default]->verify($proof, $hash);
+        return $this->algorithm->verify($proof, $hash);
     }
 }

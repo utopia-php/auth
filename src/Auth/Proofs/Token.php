@@ -18,6 +18,8 @@ class Token extends Proof
      */
     public function __construct(int $length = 256)
     {
+        parent::__construct();
+        
         if ($length <= 0) {
             throw new \Exception('Token length must be greater than 0');
         }
@@ -41,7 +43,7 @@ class Token extends Proof
      */
     public function hash(string $proof): string
     {
-        return \hash('sha256', $proof);
+        return $this->algorithm->hash($proof);
     }
 
     /**
@@ -49,6 +51,33 @@ class Token extends Proof
      */
     public function verify(string $proof, string $hash): bool
     {
-        return $this->hash($proof) === $hash;
+        return $this->algorithm->verify($proof, $hash);
+    }
+
+    /**
+     * Get the token length
+     *
+     * @return int
+     */
+    public function getLength(): int
+    {
+        return $this->length;
+    }
+
+    /**
+     * Set the token length
+     *
+     * @param int $length
+     * @return self
+     * @throws \Exception
+     */
+    public function setLength(int $length): self
+    {
+        if ($length <= 0) {
+            throw new \Exception('Token length must be greater than 0');
+        }
+        
+        $this->length = $length;
+        return $this;
     }
 }

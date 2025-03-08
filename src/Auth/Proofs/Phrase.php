@@ -2,9 +2,9 @@
 
 namespace Utopia\Auth\Proofs;
 
-use Utopia\Auth\Algorithms\Argon2;
+use Utopia\Auth\Proof;
 
-class Phrase extends Password
+class Phrase extends Proof
 {
     private array $adjectives = ['Abundant', 'Adaptable', 'Adventurous', 'Affectionate', 'Agile', 'Amiable', 'Amazing', 'Ambitious', 'Amicable', 'Amusing', 'Astonishing', 'Attentive', 'Authentic', 'Awesome', 'Balanced', 'Beautiful', 'Bold', 'Brave', 'Bright', 'Bubbly', 'Calm', 'Capable', 'Charismatic', 'Charming', 'Cheerful', 'Clever', 'Colorful', 'Compassionate', 'Confident', 'Cooperative', 'Courageous', 'Courteous', 'Creative', 'Curious', 'Dazzling', 'Dedicated', 'Delightful', 'Determined', 'Diligent', 'Dynamic', 'Easygoing', 'Effervescent', 'Efficient', 'Elegant', 'Empathetic', 'Energetic', 'Enthusiastic', 'Exuberant', 'Faithful', 'Fantastic', 'Fearless', 'Flexible', 'Friendly', 'Fun-loving', 'Generous', 'Gentle', 'Genuine', 'Graceful', 'Gracious', 'Happy', 'Hardworking', 'Harmonious', 'Helpful', 'Honest', 'Hopeful', 'Humble', 'Imaginative', 'Impressive', 'Incredible', 'Inspiring', 'Intelligent', 'Joyful', 'Kind', 'Knowledgeable', 'Lively', 'Lovable', 'Lovely', 'Loyal', 'Majestic', 'Magnificent', 'Mindful', 'Modest', 'Passionate', 'Patient', 'Peaceful', 'Perseverant', 'Playful', 'Polite', 'Positive', 'Powerful', 'Practical', 'Precious', 'Proactive', 'Productive', 'Punctual', 'Quick-witted', 'Radiant', 'Reliable', 'Resilient', 'Resourceful', 'Respectful', 'Responsible', 'Sensitive', 'Serene', 'Sincere', 'Skillful', 'Soothing', 'Spirited', 'Splendid', 'Steadfast', 'Strong', 'Supportive', 'Sweet', 'Talented', 'Thankful', 'Thoughtful', 'Thriving', 'Tranquil', 'Trustworthy', 'Upbeat', 'Versatile', 'Vibrant', 'Vigilant', 'Warmhearted', 'Welcoming', 'Wholesome', 'Witty', 'Wonderful', 'Zealous'];
 
@@ -15,7 +15,7 @@ class Phrase extends Password
      */
     public function __construct()
     {
-        parent::__construct('argon2', ['argon2' => new Argon2()]);
+        parent::__construct();
     }
 
     /**
@@ -40,7 +40,7 @@ class Phrase extends Password
      */
     public function hash(string $proof): string
     {
-        return password_hash($proof, PASSWORD_DEFAULT);
+        return $this->algorithm->hash($proof);
     }
 
     /**
@@ -52,6 +52,6 @@ class Phrase extends Password
      */
     public function verify(string $proof, string $hash): bool
     {
-        return password_verify($proof, $hash);
+        return $this->algorithm->verify($proof, $hash);
     }
 }

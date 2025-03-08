@@ -44,4 +44,28 @@ class TokenTest extends TestCase
         $this->assertTrue($this->token->verify($proof, $hash));
         $this->assertFalse($this->token->verify('wrongtoken', $hash));
     }
+
+    public function testGetLength()
+    {
+        $this->assertEquals(32, $this->token->getLength());
+        
+        $token = new Token(64);
+        $this->assertEquals(64, $token->getLength());
+    }
+
+    public function testSetLength()
+    {
+        $this->token->setLength(64);
+        $this->assertEquals(64, $this->token->getLength());
+
+        $proof = $this->token->generate('user123');
+        $this->assertEquals(64, strlen($proof));
+    }
+
+    public function testSetLengthInvalid()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Token length must be greater than 0');
+        $this->token->setLength(0);
+    }
 }

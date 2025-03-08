@@ -53,4 +53,29 @@ class CodeTest extends TestCase
         $this->assertEquals(8, strlen($proof));
         $this->assertMatchesRegularExpression('/^[0-9]{8}$/', $proof);
     }
+
+    public function testGetLength()
+    {
+        $this->assertEquals(6, $this->code->getLength());
+        
+        $code = new Code(8);
+        $this->assertEquals(8, $code->getLength());
+    }
+
+    public function testSetLength()
+    {
+        $this->code->setLength(4);
+        $this->assertEquals(4, $this->code->getLength());
+
+        $proof = $this->code->generate('test');
+        $this->assertEquals(4, strlen($proof));
+        $this->assertMatchesRegularExpression('/^[0-9]{4}$/', $proof);
+    }
+
+    public function testSetLengthInvalid()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Code length must be greater than 0');
+        $this->code->setLength(0);
+    }
 }

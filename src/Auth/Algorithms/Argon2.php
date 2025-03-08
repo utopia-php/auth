@@ -17,7 +17,7 @@ class Argon2 extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hash(string $value): string
     {
@@ -25,7 +25,7 @@ class Argon2 extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function verify(string $value, string $hash): bool
     {
@@ -34,49 +34,52 @@ class Argon2 extends Algorithm
 
     /**
      * Set memory cost
-     * 
-     * @param int $cost Memory cost in KiB
+     *
+     * @param  int  $cost Memory cost in KiB
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setMemoryCost(int $cost): self
     {
         if ($cost < PASSWORD_ARGON2_DEFAULT_MEMORY_COST) {
-            throw new \InvalidArgumentException('Memory cost must be >= ' . PASSWORD_ARGON2_DEFAULT_MEMORY_COST . ' KiB');
+            throw new \InvalidArgumentException('Memory cost must be >= '.PASSWORD_ARGON2_DEFAULT_MEMORY_COST.' KiB');
         }
-        
+
         return $this->setOption('memory_cost', $cost);
     }
 
     /**
      * Set time cost
-     * 
-     * @param int $cost Number of iterations
+     *
+     * @param  int  $cost Number of iterations
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setTimeCost(int $cost): self
     {
         if ($cost < PASSWORD_ARGON2_DEFAULT_TIME_COST) {
-            throw new \InvalidArgumentException('Time cost must be >= ' . PASSWORD_ARGON2_DEFAULT_TIME_COST);
+            throw new \InvalidArgumentException('Time cost must be >= '.PASSWORD_ARGON2_DEFAULT_TIME_COST);
         }
-        
+
         return $this->setOption('time_cost', $cost);
     }
 
     /**
      * Set number of threads
-     * 
-     * @param int $threads Number of threads to use
+     *
+     * @param  int  $threads Number of threads to use
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setThreads(int $threads): self
     {
         if ($threads < PASSWORD_ARGON2_DEFAULT_THREADS) {
-            throw new \InvalidArgumentException('Threads must be >= ' . PASSWORD_ARGON2_DEFAULT_THREADS);
+            throw new \InvalidArgumentException('Threads must be >= '.PASSWORD_ARGON2_DEFAULT_THREADS);
         }
-        
+
         return $this->setOption('threads', $threads);
     }
-} 
+}

@@ -38,4 +38,4 @@ class ScryptTest extends TestCase
 
         $this->assertTrue($this->scrypt->verify($password, $hash));
     }
-} 
+}

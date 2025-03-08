@@ -49,8 +49,8 @@ class CodeTest extends TestCase
     {
         $code = new Code(8);
         $proof = $code->generate('test');
-        
+
         $this->assertEquals(8, strlen($proof));
         $this->assertMatchesRegularExpression('/^[0-9]{8}$/', $proof);
     }
-} 
+}

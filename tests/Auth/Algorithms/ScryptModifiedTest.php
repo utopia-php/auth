@@ -36,4 +36,4 @@ class ScryptModifiedTest extends TestCase
 
         $this->assertTrue($this->scryptModified->verify($password, $hash));
     }
-} 
+}

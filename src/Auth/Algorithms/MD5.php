@@ -7,7 +7,7 @@ use Utopia\Auth\Algorithm;
 class MD5 extends Algorithm
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hash(string $value): string
     {
@@ -15,10 +15,10 @@ class MD5 extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function verify(string $value, string $hash): bool
     {
         return $this->hash($value) === $hash;
     }
-} 
+}

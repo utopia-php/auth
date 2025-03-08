@@ -12,7 +12,8 @@ class Code extends Proof
     protected int $length;
 
     /**
-     * @param int $length
+     * @param  int  $length
+     *
      * @throws \Exception
      */
     public function __construct(int $length = 6)
@@ -20,12 +21,12 @@ class Code extends Proof
         if ($length <= 0) {
             throw new \Exception('Code length must be greater than 0');
         }
-        
+
         $this->length = $length;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generate(string $input): string
     {
@@ -39,7 +40,7 @@ class Code extends Proof
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hash(string $proof): string
     {
@@ -47,10 +48,10 @@ class Code extends Proof
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function verify(string $proof, string $hash): bool
     {
         return $this->hash($proof) === $hash;
     }
-} 
+}

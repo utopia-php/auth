@@ -39,4 +39,4 @@ class ShaTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->sha->setVersion('invalid-version');
     }
-} 
+}

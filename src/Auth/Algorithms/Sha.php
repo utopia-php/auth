@@ -7,13 +7,21 @@ use Utopia\Auth\Algorithm;
 class Sha extends Algorithm
 {
     public const SHA1 = 'sha1';
+
     public const SHA224 = 'sha224';
+
     public const SHA256 = 'sha256';
+
     public const SHA384 = 'sha384';
+
     public const SHA512 = 'sha512';
+
     public const SHA3_224 = 'sha3-224';
+
     public const SHA3_256 = 'sha3-256';
+
     public const SHA3_384 = 'sha3-384';
+
     public const SHA3_512 = 'sha3-512';
 
     /**
@@ -36,27 +44,28 @@ class Sha extends Algorithm
         'sha3-224',
         'sha3-256',
         'sha3-384',
-        'sha3-512'
+        'sha3-512',
     ];
 
     /**
      * Set SHA version
-     * 
-     * @param string $version SHA version to use
+     *
+     * @param  string  $version SHA version to use
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setVersion(string $version): self
     {
-        if (!in_array($version, self::VALID_VERSIONS, true)) {
-            throw new \InvalidArgumentException('Invalid SHA version. Valid versions are: ' . implode(', ', self::VALID_VERSIONS));
+        if (! in_array($version, self::VALID_VERSIONS, true)) {
+            throw new \InvalidArgumentException('Invalid SHA version. Valid versions are: '.implode(', ', self::VALID_VERSIONS));
         }
-        
+
         return $this->setOption('version', $version);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hash(string $value): string
     {
@@ -64,10 +73,10 @@ class Sha extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function verify(string $value, string $hash): bool
     {
         return $this->hash($value) === $hash;
     }
-} 
+}

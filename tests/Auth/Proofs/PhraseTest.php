@@ -3,8 +3,8 @@
 namespace Utopia\Tests\Auth\Proofs;
 
 use PHPUnit\Framework\TestCase;
-use Utopia\Auth\Proofs\Phrase;
 use Utopia\Auth\Algorithms\Bcrypt;
+use Utopia\Auth\Proofs\Phrase;
 
 class PhraseTest extends TestCase
 {
@@ -45,4 +45,4 @@ class PhraseTest extends TestCase
         $this->assertTrue($this->phrase->verify($proof, $hash));
         $this->assertFalse($this->phrase->verify('wrong phrase here', $hash));
     }
-} 
+}

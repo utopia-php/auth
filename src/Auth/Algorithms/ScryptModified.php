@@ -10,7 +10,7 @@ class ScryptModified extends Algorithm
      * Constructor to initialize with secure default options
      */
     public function __construct()
-    {   
+    {
         // Generate cryptographically secure random values
         $salt = random_bytes(16);
         $saltSeparator = random_bytes(16);
@@ -23,7 +23,7 @@ class ScryptModified extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hash(string $value): string
     {
@@ -35,7 +35,7 @@ class ScryptModified extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function verify(string $value, string $hash): bool
     {
@@ -52,8 +52,8 @@ class ScryptModified extends Algorithm
         $saltSeparatorBytes = \base64_decode($options['saltSeparator']);
 
         $value = \mb_convert_encoding($value, 'UTF-8');
-        $derivedKey = \scrypt($value, $saltBytes . $saltSeparatorBytes, 16384, 8, 1, 64);
-        
+        $derivedKey = \scrypt($value, $saltBytes.$saltSeparatorBytes, 16384, 8, 1, 64);
+
         return \hex2bin($derivedKey);
     }
 
@@ -70,9 +70,10 @@ class ScryptModified extends Algorithm
 
     /**
      * Set salt value
-     * 
-     * @param string $salt Base64 encoded salt value
+     *
+     * @param  string  $salt Base64 encoded salt value
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setSalt(string $salt): self
@@ -80,35 +81,37 @@ class ScryptModified extends Algorithm
         if (empty($salt)) {
             throw new \InvalidArgumentException('Salt cannot be empty');
         }
-        
-        if (!preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $salt)) {
+
+        if (! preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $salt)) {
             throw new \InvalidArgumentException('Salt must be base64 encoded');
         }
-        
+
         return $this->setOption('salt', $salt);
     }
 
     /**
      * Set salt separator
-     * 
-     * @param string $separator Base64 encoded salt separator
+     *
+     * @param  string  $separator Base64 encoded salt separator
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setSaltSeparator(string $separator): self
     {
-        if (!preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $separator)) {
+        if (! preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $separator)) {
             throw new \InvalidArgumentException('Salt separator must be base64 encoded');
         }
-        
+
         return $this->setOption('saltSeparator', $separator);
     }
 
     /**
      * Set signer key
-     * 
-     * @param string $key Base64 encoded signer key
+     *
+     * @param  string  $key Base64 encoded signer key
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setSignerKey(string $key): self
@@ -116,11 +119,11 @@ class ScryptModified extends Algorithm
         if (empty($key)) {
             throw new \InvalidArgumentException('Signer key cannot be empty');
         }
-        
-        if (!preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $key)) {
+
+        if (! preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $key)) {
             throw new \InvalidArgumentException('Signer key must be base64 encoded');
         }
-        
+
         return $this->setOption('signerKey', $key);
     }
-} 
+}

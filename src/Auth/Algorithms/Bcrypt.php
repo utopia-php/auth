@@ -15,7 +15,7 @@ class Bcrypt extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hash(string $value): string
     {
@@ -23,7 +23,7 @@ class Bcrypt extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function verify(string $value, string $hash): bool
     {
@@ -32,9 +32,10 @@ class Bcrypt extends Algorithm
 
     /**
      * Set cost parameter
-     * 
-     * @param int $cost Cost parameter between 4 and 31
+     *
+     * @param  int  $cost Cost parameter between 4 and 31
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setCost(int $cost): self
@@ -42,7 +43,7 @@ class Bcrypt extends Algorithm
         if ($cost < 4 || $cost > 31) {
             throw new \InvalidArgumentException('Cost must be between 4 and 31');
         }
-        
+
         return $this->setOption('cost', $cost);
     }
-} 
+}

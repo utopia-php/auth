@@ -27,14 +27,14 @@ class PHPass extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hash(string $value): string
     {
         $options = $this->getOptions();
         $random = '';
 
-        if (CRYPT_BLOWFISH === 1 && !$options['portable_hashes']) {
+        if (CRYPT_BLOWFISH === 1 && ! $options['portable_hashes']) {
             $random = $this->getRandomBytes(16);
             $hash = crypt($value, $this->gensaltBlowfish($random));
             if (strlen($hash) === 60) {
@@ -55,7 +55,7 @@ class PHPass extends Algorithm
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function verify(string $value, string $hash): bool
     {
@@ -72,7 +72,7 @@ class PHPass extends Algorithm
      */
     protected function getRandomBytes(int $count): string
     {
-        if (!is_int($count) || $count < 1) {
+        if (! is_int($count) || $count < 1) {
             throw new \Exception('Argument count must be a positive integer');
         }
 
@@ -87,7 +87,7 @@ class PHPass extends Algorithm
             $options = $this->getOptions();
 
             for ($i = 0; $i < $count; $i += 16) {
-                $options['random_state'] = md5(microtime() . $options['random_state']);
+                $options['random_state'] = md5(microtime().$options['random_state']);
                 $output .= md5($options['random_state'], true);
             }
 
@@ -102,7 +102,7 @@ class PHPass extends Algorithm
      */
     protected function encode64(string $input, int $count): string
     {
-        if (!is_int($count) || $count < 1) {
+        if (! is_int($count) || $count < 1) {
             throw new \Exception('Argument count must be a positive integer');
         }
 
@@ -110,22 +110,22 @@ class PHPass extends Algorithm
         $i = 0;
         do {
             $value = ord($input[$i++]);
-            $output .= $this->itoa64[$value & 0x3f];
+            $output .= $this->itoa64[$value & 0x3F];
             if ($i < $count) {
                 $value |= ord($input[$i]) << 8;
             }
-            $output .= $this->itoa64[($value >> 6) & 0x3f];
+            $output .= $this->itoa64[($value >> 6) & 0x3F];
             if ($i++ >= $count) {
                 break;
             }
             if ($i < $count) {
                 $value |= ord($input[$i]) << 16;
             }
-            $output .= $this->itoa64[($value >> 12) & 0x3f];
+            $output .= $this->itoa64[($value >> 12) & 0x3F];
             if ($i++ >= $count) {
                 break;
             }
-            $output .= $this->itoa64[($value >> 18) & 0x3f];
+            $output .= $this->itoa64[($value >> 18) & 0x3F];
         } while ($i < $count);
 
         return $output;
@@ -170,12 +170,12 @@ class PHPass extends Algorithm
             $c2 = ord($input[$i++]);
             $c1 |= $c2 >> 4;
             $output .= $itoa64[$c1];
-            $c1 = ($c2 & 0x0f) << 2;
+            $c1 = ($c2 & 0x0F) << 2;
 
             $c2 = ord($input[$i++]);
             $c1 |= $c2 >> 6;
             $output .= $itoa64[$c1];
-            $output .= $itoa64[$c2 & 0x3f];
+            $output .= $itoa64[$c2 & 0x3F];
         } while (1);
 
         return $output;
@@ -208,9 +208,9 @@ class PHPass extends Algorithm
             return $output;
         }
 
-        $hash = md5($salt . $password, true);
+        $hash = md5($salt.$password, true);
         do {
-            $hash = md5($hash . $password, true);
+            $hash = md5($hash.$password, true);
         } while (--$count);
 
         $output = substr($setting, 0, 12);
@@ -221,9 +221,10 @@ class PHPass extends Algorithm
 
     /**
      * Set iteration count (log2)
-     * 
-     * @param int $count Iteration count (log2) between 4 and 31
+     *
+     * @param  int  $count Iteration count (log2) between 4 and 31
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setIterationCount(int $count): self
@@ -231,18 +232,18 @@ class PHPass extends Algorithm
         if ($count < 4 || $count > 31) {
             throw new \InvalidArgumentException('Iteration count must be between 4 and 31');
         }
-        
+
         return $this->setOption('iteration_count_log2', $count);
     }
 
     /**
      * Set portable hashes mode
-     * 
-     * @param bool $portable Whether to use portable hashes
+     *
+     * @param  bool  $portable Whether to use portable hashes
      * @return self
      */
     public function setPortableHashes(bool $portable): self
     {
         return $this->setOption('portable_hashes', $portable);
     }
-} 
+}

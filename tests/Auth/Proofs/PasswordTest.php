@@ -3,7 +3,6 @@
 namespace Utopia\Tests\Auth\Proofs;
 
 use PHPUnit\Framework\TestCase;
-use Utopia\Auth\Proofs\Password;
 use Utopia\Auth\Algorithms\Argon2;
 use Utopia\Auth\Algorithms\Bcrypt;
 use Utopia\Auth\Algorithms\MD5;
@@ -11,11 +10,14 @@ use Utopia\Auth\Algorithms\PHPass;
 use Utopia\Auth\Algorithms\Scrypt;
 use Utopia\Auth\Algorithms\ScryptModified;
 use Utopia\Auth\Algorithms\Sha;
+use Utopia\Auth\Proofs\Password;
 
 class PasswordTest extends TestCase
 {
     protected Password $password;
+
     protected Password $legacyPassword;
+
     protected Bcrypt $bcrypt;
 
     protected function setUp(): void
@@ -88,7 +90,7 @@ class PasswordTest extends TestCase
 
         $this->password->setDefaultAlgorithm(Password::BCRYPT);
         $this->password->removeAlgorithm(Password::ARGON2); // Should work now
-        
+
         $this->expectException(\Exception::class);
         $this->password->getAlgorithm(Password::ARGON2); // Should throw as algorithm was removed
     }
@@ -112,7 +114,7 @@ class PasswordTest extends TestCase
             Password::SCRYPT_MODIFIED,
             Password::SHA,
             Password::MD5,
-            Password::PHPASS
+            Password::PHPASS,
         ];
 
         foreach ($algorithms as $algo) {
@@ -133,4 +135,4 @@ class PasswordTest extends TestCase
         $this->assertStringStartsWith('$2y$', $hash);
         $this->assertTrue($this->legacyPassword->verify($proof, $hash));
     }
-} 
+}

@@ -4,7 +4,6 @@ namespace Utopia\Tests\Auth\Proofs;
 
 use PHPUnit\Framework\TestCase;
 use Utopia\Auth\Proofs\Token;
-use Utopia\Auth\Algorithms\Bcrypt;
 
 class TokenTest extends TestCase
 {
@@ -45,4 +44,4 @@ class TokenTest extends TestCase
         $this->assertTrue($this->token->verify($proof, $hash));
         $this->assertFalse($this->token->verify('wrongtoken', $hash));
     }
-} 
+}

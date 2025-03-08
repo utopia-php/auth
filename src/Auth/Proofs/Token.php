@@ -12,7 +12,8 @@ class Token extends Proof
     protected int $length;
 
     /**
-     * @param int $length
+     * @param  int  $length
+     *
      * @throws \Exception
      */
     public function __construct(int $length = 256)
@@ -20,12 +21,12 @@ class Token extends Proof
         if ($length <= 0) {
             throw new \Exception('Token length must be greater than 0');
         }
-        
+
         $this->length = $length;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generate(string $input): string
     {
@@ -36,7 +37,7 @@ class Token extends Proof
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hash(string $proof): string
     {
@@ -44,10 +45,10 @@ class Token extends Proof
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function verify(string $proof, string $hash): bool
     {
         return $this->hash($proof) === $hash;
     }
-} 
+}

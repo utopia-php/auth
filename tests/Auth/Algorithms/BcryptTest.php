@@ -25,4 +25,4 @@ class BcryptTest extends TestCase
         $this->assertTrue($this->bcrypt->verify($password, $hash));
         $this->assertFalse($this->bcrypt->verify('wrongpassword', $hash));
     }
-} 
+}

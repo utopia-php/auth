@@ -19,18 +19,16 @@ class TokenTest extends TestCase
 
     public function testGenerate()
     {
-        $input = 'user123';
-        $proof = $this->token->generate($input);
+        $proof = $this->token->generate();
 
         $this->assertNotEmpty($proof);
         $this->assertIsString($proof);
-        $this->assertNotEquals($input, $proof);
         $this->assertEquals(32, strlen($proof)); // Default token length
     }
 
     public function testHash()
     {
-        $proof = $this->token->generate('user123');
+        $proof = $this->token->generate();
         $hash = $this->token->hash($proof);
 
         $this->assertNotEmpty($hash);
@@ -41,7 +39,7 @@ class TokenTest extends TestCase
 
     public function testVerify()
     {
-        $proof = $this->token->generate('user123');
+        $proof = $this->token->generate();
         $hash = $this->token->hash($proof);
 
         $this->assertTrue($this->token->verify($proof, $hash));
@@ -61,7 +59,7 @@ class TokenTest extends TestCase
         $this->token->setLength(64);
         $this->assertEquals(64, $this->token->getLength());
 
-        $proof = $this->token->generate('user123');
+        $proof = $this->token->generate();
         $this->assertEquals(64, strlen($proof));
     }
 

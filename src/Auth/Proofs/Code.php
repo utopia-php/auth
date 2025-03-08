@@ -59,7 +59,7 @@ class Code extends Proof
     /**
      * {@inheritdoc}
      */
-    public function generate(string $input): string
+    public function generate(): string
     {
         $value = '';
 

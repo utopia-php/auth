@@ -33,6 +33,10 @@ class Password extends Proof
      */
     protected array $algorithms = [];
 
+    protected int $defaultLength = 16;
+
+    protected string $defaultCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+
     /**
      * @param  array<string, Algorithm>  $algorithms
      *
@@ -118,11 +122,54 @@ class Password extends Proof
     }
 
     /**
+     * Set password generation length
+     *
+     * @param  int  $length
+     * @return self
+     *
+     * @throws \Exception
+     */
+    public function setLength(int $length): self
+    {
+        if ($length < 8) {
+            throw new \Exception('Password length must be at least 8 characters');
+        }
+        $this->defaultLength = $length;
+
+        return $this;
+    }
+
+    /**
+     * Set password generation charset
+     *
+     * @param  string  $charset
+     * @return self
+     *
+     * @throws \Exception
+     */
+    public function setCharset(string $charset): self
+    {
+        if (strlen($charset) < 10) {
+            throw new \Exception('Password charset must contain at least 10 characters');
+        }
+        $this->defaultCharset = $charset;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function generate(string $input): string
+    public function generate(): string
     {
-        return $input; // For passwords, we just return the input as is
+        $password = '';
+        $max = strlen($this->defaultCharset) - 1;
+
+        for ($i = 0; $i < $this->defaultLength; $i++) {
+            $password .= $this->defaultCharset[random_int(0, $max)];
+        }
+
+        return $password;
     }
 
     /**

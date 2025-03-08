@@ -33,56 +33,105 @@ Utopia Framework requires PHP 8.0 or later. We recommend using the latest PHP ve
 
 ## Usage
 
-### Basic Usage
+### Password Hashing
 
 ```php
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Utopia\Auth\Algorithm;
+use Utopia\Auth\Proofs\Password;
+use Utopia\Auth\Algorithms\Argon2;
+use Utopia\Auth\Algorithms\Bcrypt;
+
+// Initialize password authentication with default algorithms
+$password = new Password();
+
+// Hash a password (uses Argon2 by default)
+$hash = $password->hash('user-password');
+
+// Verify the password
+$isValid = $password->verify('user-password', $hash);
+
+// Use a specific algorithm with custom parameters
+$bcrypt = new Bcrypt();
+$bcrypt->setCost(12); // Increase cost factor for better security
+
+$password->setAlgorithm($bcrypt);
+$hash = $password->hash('user-password');
+```
+
+### Authentication Tokens
+
+```php
+<?php
+
+use Utopia\Auth\Proofs\Token;
+
+// Generate secure authentication tokens
+$token = new Token(32); // 32 characters length
+$authToken = $token->generate(); // Random token
+$hashedToken = $token->hash($authToken); // Store this in database
+
+// Later, verify the token
+$isValid = $token->verify($authToken, $hashedToken);
+```
+
+### One-Time Codes
+
+```php
+<?php
+
+use Utopia\Auth\Proofs\Code;
+
+// Generate verification codes (e.g., for 2FA)
+$code = new Code(6); // 6-digit code
+$verificationCode = $code->generate();
+$hashedCode = $code->hash($verificationCode);
+
+// Verify the code
+$isValid = $code->verify($verificationCode, $hashedCode);
+```
+
+### Human-Readable Phrases
+
+```php
+<?php
+
+use Utopia\Auth\Proofs\Phrase;
+
+// Generate memorable authentication phrases
+$phrase = new Phrase();
+$authPhrase = $phrase->generate(); // e.g., "Brave cat"
+$hashedPhrase = $phrase->hash($authPhrase);
+
+// Verify the phrase
+$isValid = $phrase->verify($authPhrase, $hashedPhrase);
+```
+
+### Advanced Algorithm Configuration
+
+```php
+<?php
+
+use Utopia\Auth\Algorithms\Scrypt;
 use Utopia\Auth\Algorithms\Argon2;
 
-// Initialize with a specific algorithm
-$algorithm = new Argon2();
-
-// Hash a password
-$hash = $algorithm->hash('user-password');
-
-// Verify a password
-$isValid = $algorithm->verify('user-password', $hash);
-```
-
-### Using Different Algorithms
-
-```php
-<?php
-
-use Utopia\Auth\Algorithms\Bcrypt;
-use Utopia\Auth\Algorithms\Scrypt;
-
-// Using Bcrypt
-$bcrypt = new Bcrypt();
-$hash = $bcrypt->hash('password');
-
-// Using Scrypt
+// Configure Scrypt parameters
 $scrypt = new Scrypt();
-$hash = $scrypt->hash('password');
-```
+$scrypt
+    ->setCpuCost(16)      // CPU/Memory cost parameter
+    ->setMemoryCost(14)   // Memory cost parameter
+    ->setParallelCost(2)  // Parallelization parameter
+    ->setLength(64)       // Output length in bytes
+    ->setSalt('randomsalt123'); // Custom salt
 
-### Authentication Proofs
-
-The library also supports various authentication proofs for implementing secure authentication flows:
-
-```php
-<?php
-
-use Utopia\Auth\Proofs;
-
-// Initialize proofs
-$proofs = new Proofs();
-
-// Add your authentication proof logic here
+// Configure Argon2 parameters
+$argon2 = new Argon2();
+$argon2
+    ->setMemoryCost(65536)  // Memory cost in KiB
+    ->setTimeCost(4)        // Number of iterations
+    ->setThreads(3);        // Number of threads
 ```
 
 ## Tests

@@ -42,10 +42,9 @@ abstract class Proof
     /**
      * Generate a proof
      *
-     * @param  string  $input
      * @return string
      */
-    abstract public function generate(string $input): string;
+    abstract public function generate(): string;
 
     /**
      * Hash a proof

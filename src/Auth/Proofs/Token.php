@@ -30,7 +30,7 @@ class Token extends Proof
     /**
      * {@inheritdoc}
      */
-    public function generate(string $input): string
+    public function generate(): string
     {
         $bytesLength = (int) ceil($this->length / 2);
         $token = \bin2hex(\random_bytes($bytesLength));

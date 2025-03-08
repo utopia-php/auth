@@ -32,17 +32,45 @@ class PasswordTest extends TestCase
 
     public function testGenerate()
     {
-        $input = 'test123';
-        $proof = $this->password->generate($input);
+        $proof = $this->password->generate();
 
         $this->assertNotEmpty($proof);
         $this->assertIsString($proof);
-        $this->assertEquals($input, $proof);
+        $this->assertEquals(16, strlen($proof)); // Default length
+        $this->assertMatchesRegularExpression('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]+$/', $proof);
+    }
+
+    public function testGenerateWithCustomLength()
+    {
+        $this->password->setLength(20);
+        $proof = $this->password->generate();
+        $this->assertEquals(20, strlen($proof));
+    }
+
+    public function testGenerateWithCustomCharset()
+    {
+        $this->password->setCharset('abcdef123456');
+        $proof = $this->password->generate();
+        $this->assertMatchesRegularExpression('/^[abcdef123456]+$/', $proof);
+    }
+
+    public function testSetLengthValidation()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Password length must be at least 8 characters');
+        $this->password->setLength(7);
+    }
+
+    public function testSetCharsetValidation()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Password charset must contain at least 10 characters');
+        $this->password->setCharset('123456789');
     }
 
     public function testHash()
     {
-        $proof = 'test123';
+        $proof = $this->password->generate();
         $hash = $this->password->hash($proof);
 
         $this->assertNotEmpty($hash);
@@ -52,7 +80,7 @@ class PasswordTest extends TestCase
 
     public function testVerify()
     {
-        $proof = 'test123';
+        $proof = $this->password->generate();
         $hash = $this->password->hash($proof);
 
         $this->assertTrue($this->password->verify($proof, $hash));
@@ -69,7 +97,7 @@ class PasswordTest extends TestCase
         $this->assertInstanceOf(Bcrypt::class, $algorithm);
 
         // Test that the algorithm works
-        $proof = 'test123';
+        $proof = $this->password->generate();
         $this->password->setAlgorithm($algorithm);
         $hash = $this->password->hash($proof);
 
@@ -117,7 +145,7 @@ class PasswordTest extends TestCase
 
     public function testAllAlgorithmsWork()
     {
-        $proof = 'test123';
+        $proof = $this->password->generate();
         $algorithms = [
             Password::ARGON2,
             Password::BCRYPT,
@@ -139,7 +167,7 @@ class PasswordTest extends TestCase
 
     public function testLegacyConstructor()
     {
-        $proof = 'test123';
+        $proof = $this->password->generate();
         $hash = $this->legacyPassword->hash($proof);
 
         $this->assertNotEmpty($hash);

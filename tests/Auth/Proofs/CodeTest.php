@@ -16,19 +16,17 @@ class CodeTest extends TestCase
 
     public function testGenerate()
     {
-        $input = 'user@example.com';
-        $proof = $this->code->generate($input);
+        $proof = $this->code->generate();
 
         $this->assertNotEmpty($proof);
         $this->assertIsString($proof);
-        $this->assertNotEquals($input, $proof);
         $this->assertEquals(6, strlen($proof)); // Default code length
         $this->assertMatchesRegularExpression('/^[0-9]{6}$/', $proof);
     }
 
     public function testHash()
     {
-        $proof = $this->code->generate('user@example.com');
+        $proof = $this->code->generate();
         $hash = $this->code->hash($proof);
 
         $this->assertNotEmpty($hash);
@@ -37,7 +35,7 @@ class CodeTest extends TestCase
 
     public function testVerify()
     {
-        $proof = $this->code->generate('user@example.com');
+        $proof = $this->code->generate();
         $hash = $this->code->hash($proof);
 
         $this->assertTrue($this->code->verify($proof, $hash));
@@ -47,7 +45,7 @@ class CodeTest extends TestCase
     public function testCustomLength()
     {
         $code = new Code(8);
-        $proof = $code->generate('test');
+        $proof = $code->generate();
 
         $this->assertEquals(8, strlen($proof));
         $this->assertMatchesRegularExpression('/^[0-9]{8}$/', $proof);
@@ -66,7 +64,7 @@ class CodeTest extends TestCase
         $this->code->setLength(4);
         $this->assertEquals(4, $this->code->getLength());
 
-        $proof = $this->code->generate('test');
+        $proof = $this->code->generate();
         $this->assertEquals(4, strlen($proof));
         $this->assertMatchesRegularExpression('/^[0-9]{4}$/', $proof);
     }

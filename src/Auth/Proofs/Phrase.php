@@ -19,12 +19,11 @@ class Phrase extends Proof
     }
 
     /**
-     * Generate a proof based on input
+     * Generate a proof
      *
-     * @param  string  $input Input to generate proof from (unused in this implementation)
      * @return string
      */
-    public function generate(string $input): string
+    public function generate(): string
     {
         $adjective = $this->adjectives[array_rand($this->adjectives)];
         $noun = $this->nouns[array_rand($this->nouns)];

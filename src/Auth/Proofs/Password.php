@@ -41,7 +41,7 @@ class Password extends Proof
     public function __construct(array $algorithms = [])
     {
         parent::__construct();
-        
+
         // Initialize default algorithms if none provided
         if (empty($algorithms)) {
             $algorithms = [

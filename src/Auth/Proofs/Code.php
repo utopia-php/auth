@@ -19,7 +19,7 @@ class Code extends Proof
     public function __construct(int $length = 6)
     {
         parent::__construct();
-        
+
         if ($length <= 0) {
             throw new \Exception('Code length must be greater than 0');
         }
@@ -40,8 +40,9 @@ class Code extends Proof
     /**
      * Set the code length
      *
-     * @param int $length
+     * @param  int  $length
      * @return self
+     *
      * @throws \Exception
      */
     public function setLength(int $length): self
@@ -49,8 +50,9 @@ class Code extends Proof
         if ($length <= 0) {
             throw new \Exception('Code length must be greater than 0');
         }
-        
+
         $this->length = $length;
+
         return $this;
     }
 

@@ -57,7 +57,7 @@ class CodeTest extends TestCase
     public function testGetLength()
     {
         $this->assertEquals(6, $this->code->getLength());
-        
+
         $code = new Code(8);
         $this->assertEquals(8, $code->getLength());
     }

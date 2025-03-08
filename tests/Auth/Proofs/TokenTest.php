@@ -48,7 +48,7 @@ class TokenTest extends TestCase
     public function testGetLength()
     {
         $this->assertEquals(32, $this->token->getLength());
-        
+
         $token = new Token(64);
         $this->assertEquals(64, $token->getLength());
     }

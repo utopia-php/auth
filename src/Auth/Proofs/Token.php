@@ -19,7 +19,7 @@ class Token extends Proof
     public function __construct(int $length = 256)
     {
         parent::__construct();
-        
+
         if ($length <= 0) {
             throw new \Exception('Token length must be greater than 0');
         }
@@ -67,8 +67,9 @@ class Token extends Proof
     /**
      * Set the token length
      *
-     * @param int $length
+     * @param  int  $length
      * @return self
+     *
      * @throws \Exception
      */
     public function setLength(int $length): self
@@ -76,8 +77,9 @@ class Token extends Proof
         if ($length <= 0) {
             throw new \Exception('Token length must be greater than 0');
         }
-        
+
         $this->length = $length;
+
         return $this;
     }
 }

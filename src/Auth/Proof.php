@@ -19,12 +19,13 @@ abstract class Proof
     /**
      * Set custom algorithm
      *
-     * @param Algorithm $algorithm
+     * @param  Algorithm  $algorithm
      * @return self
      */
     public function setAlgorithm(Algorithm $algorithm): self
     {
         $this->algorithm = $algorithm;
+
         return $this;
     }
 

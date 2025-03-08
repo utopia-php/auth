@@ -34,8 +34,8 @@ body:
   - type: dropdown
     id: appwrite-version
     attributes:
-      label: "🎲 Utopia Storage Version"
-      description: "What version of Utopia Storage are you running?"
+      label: "🎲 Utopia Auth Version"
+      description: "What version of Utopia Auth are you running?"
       options:
         - Version 0.5.x
         - Version 0.4.x

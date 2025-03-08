@@ -1,0 +1,31 @@
+{
+    "name": "utopia-php/auth",
+    "description": "Lite & fast micro PHP auth library that is easy to use",
+    "type": "library",
+    "keywords": ["php", "auth", "utopia", "authentication", "authorization", "utopia-framework"],
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Utopia PHP",
+            "email": "team@appwrite.io"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Utopia\\Auth\\": "src/Auth"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Utopia\\Auth\\Tests\\": "tests/Auth"
+        }
+    },
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "vimeo/psalm": "^4.0"
+    }
+} 

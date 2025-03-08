@@ -1,0 +1,85 @@
+<?php
+
+namespace Utopia\Tests\Auth\Algorithms;
+
+use PHPUnit\Framework\TestCase;
+use Utopia\Auth\Algorithms\PHPass;
+
+class PHPassTest extends TestCase
+{
+    protected PHPass $phpass;
+
+    protected function setUp(): void
+    {
+        $this->phpass = new PHPass();
+    }
+
+    public function testHash()
+    {
+        $password = 'test123';
+        $hash = $this->phpass->hash($password);
+
+        $this->assertNotEmpty($hash);
+        $this->assertIsString($hash);
+        $this->assertTrue($this->phpass->verify($password, $hash));
+        $this->assertFalse($this->phpass->verify('wrongpassword', $hash));
+    }
+
+    public function testIterationCount()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->phpass->setIterationCount(3); // Should throw exception for too low iteration count
+    }
+
+    public function testValidIterationCount()
+    {
+        $this->phpass->setIterationCount(8);
+
+        // Test that the new iteration count is being used by verifying a hash
+        $password = 'test123';
+        $hash = $this->phpass->hash($password);
+        $this->assertTrue($this->phpass->verify($password, $hash));
+    }
+
+    public function testPortableHashes()
+    {
+        // Test with portable hashes enabled
+        $this->phpass->setPortableHashes(true);
+        $password = 'test123';
+        $hash = $this->phpass->hash($password);
+        $this->assertTrue($this->phpass->verify($password, $hash));
+
+        // Test with portable hashes disabled
+        $this->phpass->setPortableHashes(false);
+        $hash = $this->phpass->hash($password);
+        $this->assertTrue($this->phpass->verify($password, $hash));
+    }
+
+    public function testSpecialCharacters()
+    {
+        $password = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+        $hash = $this->phpass->hash($password);
+        $this->assertTrue($this->phpass->verify($password, $hash));
+    }
+
+    public function testUnicodeCharacters()
+    {
+        $password = 'Hello 世界';
+        $hash = $this->phpass->hash($password);
+        $this->assertTrue($this->phpass->verify($password, $hash));
+    }
+
+    public function testEmptyString()
+    {
+        $password = '';
+        $hash = $this->phpass->hash($password);
+        $this->assertTrue($this->phpass->verify($password, $hash));
+    }
+
+    public function testLongPassword()
+    {
+        $password = str_repeat('a', 1000);
+        $hash = $this->phpass->hash($password);
+        $this->assertTrue($this->phpass->verify($password, $hash));
+    }
+}

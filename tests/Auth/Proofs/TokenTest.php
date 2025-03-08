@@ -3,8 +3,8 @@
 namespace Utopia\Tests\Auth\Proofs;
 
 use PHPUnit\Framework\TestCase;
-use Utopia\Auth\Proofs\Token;
 use Utopia\Auth\Algorithms\Sha;
+use Utopia\Auth\Proofs\Token;
 
 class TokenTest extends TestCase
 {

@@ -14,7 +14,7 @@ class BcryptTest extends TestCase
         $this->bcrypt = new Bcrypt();
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $password = 'test123';
         $hash = $this->bcrypt->hash($password);

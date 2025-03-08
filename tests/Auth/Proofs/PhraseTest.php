@@ -12,10 +12,11 @@ class PhraseTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->phrase = new Phrase(new Bcrypt());
+        $this->phrase = new Phrase();
+        $this->phrase->setAlgorithm(new Bcrypt());
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $proof = $this->phrase->generate();
 
@@ -25,7 +26,7 @@ class PhraseTest extends TestCase
         $this->assertMatchesRegularExpression('/^[a-zA-Z\s]+$/', $proof); // Letters (both cases) and spaces
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $proof = $this->phrase->generate();
         $hash = $this->phrase->hash($proof);
@@ -35,7 +36,7 @@ class PhraseTest extends TestCase
         $this->assertStringStartsWith('$argon2id$', $hash);
     }
 
-    public function testVerify()
+    public function testVerify(): void
     {
         $proof = $this->phrase->generate();
         $hash = $this->phrase->hash($proof);

@@ -14,7 +14,7 @@ class PHPassTest extends TestCase
         $this->phpass = new PHPass();
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $password = 'test123';
         $hash = $this->phpass->hash($password);
@@ -25,13 +25,13 @@ class PHPassTest extends TestCase
         $this->assertFalse($this->phpass->verify('wrongpassword', $hash));
     }
 
-    public function testIterationCount()
+    public function testIterationCount(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->phpass->setIterationCount(3); // Should throw exception for too low iteration count
     }
 
-    public function testValidIterationCount()
+    public function testValidIterationCount(): void
     {
         $this->phpass->setIterationCount(8);
 
@@ -41,7 +41,7 @@ class PHPassTest extends TestCase
         $this->assertTrue($this->phpass->verify($password, $hash));
     }
 
-    public function testPortableHashes()
+    public function testPortableHashes(): void
     {
         // Test with portable hashes enabled
         $this->phpass->setPortableHashes(true);
@@ -55,28 +55,28 @@ class PHPassTest extends TestCase
         $this->assertTrue($this->phpass->verify($password, $hash));
     }
 
-    public function testSpecialCharacters()
+    public function testSpecialCharacters(): void
     {
         $password = '!@#$%^&*()_+-=[]{}|;:,.<>?';
         $hash = $this->phpass->hash($password);
         $this->assertTrue($this->phpass->verify($password, $hash));
     }
 
-    public function testUnicodeCharacters()
+    public function testUnicodeCharacters(): void
     {
         $password = 'Hello 世界';
         $hash = $this->phpass->hash($password);
         $this->assertTrue($this->phpass->verify($password, $hash));
     }
 
-    public function testEmptyString()
+    public function testEmptyString(): void
     {
         $password = '';
         $hash = $this->phpass->hash($password);
         $this->assertTrue($this->phpass->verify($password, $hash));
     }
 
-    public function testLongPassword()
+    public function testLongPassword(): void
     {
         $password = str_repeat('a', 1000);
         $hash = $this->phpass->hash($password);

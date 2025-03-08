@@ -14,7 +14,7 @@ class ScryptModifiedTest extends TestCase
         $this->scryptModified = new ScryptModified();
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $password = 'test123';
         $hash = $this->scryptModified->hash($password);
@@ -25,7 +25,7 @@ class ScryptModifiedTest extends TestCase
         $this->assertFalse($this->scryptModified->verify('wrongpassword', $hash));
     }
 
-    public function testCustomOptions()
+    public function testCustomOptions(): void
     {
         $this->scryptModified->setSalt(base64_encode('custom-salt'))
             ->setSaltSeparator(base64_encode('custom-separator'))

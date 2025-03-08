@@ -78,7 +78,10 @@ class PHPass extends Algorithm
 
         $output = '';
         if (@is_readable('/dev/urandom') && ($fh = @fopen('/dev/urandom', 'rb'))) {
-            $output = fread($fh, $count);
+            $readOutput = fread($fh, $count);
+            if ($readOutput !== false) {
+                $output = $readOutput;
+            }
             fclose($fh);
         }
 
@@ -227,13 +230,14 @@ class PHPass extends Algorithm
      *
      * @throws \InvalidArgumentException
      */
-    public function setIterationCount(int $count): self
+    public function setIterationCount(int $count): PHPass
     {
         if ($count < 4 || $count > 31) {
             throw new \InvalidArgumentException('Iteration count must be between 4 and 31');
         }
 
-        return $this->setOption('iteration_count_log2', $count);
+        $this->setOption('iteration_count_log2', $count);
+        return $this;
     }
 
     /**
@@ -242,8 +246,9 @@ class PHPass extends Algorithm
      * @param  bool  $portable Whether to use portable hashes
      * @return self
      */
-    public function setPortableHashes(bool $portable): self
+    public function setPortableHashes(bool $portable): PHPass
     {
-        return $this->setOption('portable_hashes', $portable);
+        $this->setOption('portable_hashes', $portable);
+        return $this;
     }
 }

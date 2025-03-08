@@ -44,6 +44,8 @@ class Bcrypt extends Algorithm
             throw new \InvalidArgumentException('Cost must be between 4 and 31');
         }
 
-        return $this->setOption('cost', $cost);
+        $this->setOption('cost', $cost);
+
+        return $this;
     }
 }

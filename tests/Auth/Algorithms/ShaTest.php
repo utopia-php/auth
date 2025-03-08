@@ -14,7 +14,7 @@ class ShaTest extends TestCase
         $this->sha = new Sha();
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $password = 'test123';
         $hash = $this->sha->hash($password);
@@ -25,7 +25,7 @@ class ShaTest extends TestCase
         $this->assertFalse($this->sha->verify('wrongpassword', $hash));
     }
 
-    public function testCustomVersion()
+    public function testCustomVersion(): void
     {
         $this->sha->setVersion(Sha::SHA256);
         $password = 'test123';
@@ -34,7 +34,7 @@ class ShaTest extends TestCase
         $this->assertTrue($this->sha->verify($password, $hash));
     }
 
-    public function testInvalidVersion()
+    public function testInvalidVersion(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->sha->setVersion('invalid-version');

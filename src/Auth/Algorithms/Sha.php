@@ -61,7 +61,9 @@ class Sha extends Algorithm
             throw new \InvalidArgumentException('Invalid SHA version. Valid versions are: '.implode(', ', self::VALID_VERSIONS));
         }
 
-        return $this->setOption('version', $version);
+        $this->setOption('version', $version);
+        
+        return $this;
     }
 
     /**
@@ -69,7 +71,11 @@ class Sha extends Algorithm
      */
     public function hash(string $value): string
     {
-        return \hash($this->getOption('version'), $value);
+        $version = $this->getOption('version');
+        if (!is_string($version)) {
+            throw new \RuntimeException('SHA version must be a string');
+        }
+        return \hash($version, $value);
     }
 
     /**

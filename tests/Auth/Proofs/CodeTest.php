@@ -14,7 +14,7 @@ class CodeTest extends TestCase
         $this->code = new Code(); // Using default length of 6
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $proof = $this->code->generate();
 
@@ -24,7 +24,7 @@ class CodeTest extends TestCase
         $this->assertMatchesRegularExpression('/^[0-9]{6}$/', $proof);
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $proof = $this->code->generate();
         $hash = $this->code->hash($proof);
@@ -33,7 +33,7 @@ class CodeTest extends TestCase
         $this->assertIsString($hash);
     }
 
-    public function testVerify()
+    public function testVerify(): void
     {
         $proof = $this->code->generate();
         $hash = $this->code->hash($proof);
@@ -42,7 +42,7 @@ class CodeTest extends TestCase
         $this->assertFalse($this->code->verify('000000', $hash));
     }
 
-    public function testCustomLength()
+    public function testCustomLength(): void
     {
         $code = new Code(8);
         $proof = $code->generate();
@@ -51,7 +51,7 @@ class CodeTest extends TestCase
         $this->assertMatchesRegularExpression('/^[0-9]{8}$/', $proof);
     }
 
-    public function testGetLength()
+    public function testGetLength(): void
     {
         $this->assertEquals(6, $this->code->getLength());
 
@@ -59,7 +59,7 @@ class CodeTest extends TestCase
         $this->assertEquals(8, $code->getLength());
     }
 
-    public function testSetLength()
+    public function testSetLength(): void
     {
         $this->code->setLength(4);
         $this->assertEquals(4, $this->code->getLength());
@@ -69,7 +69,7 @@ class CodeTest extends TestCase
         $this->assertMatchesRegularExpression('/^[0-9]{4}$/', $proof);
     }
 
-    public function testSetLengthInvalid()
+    public function testSetLengthInvalid(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Code length must be greater than 0');

@@ -30,7 +30,7 @@ class PasswordTest extends TestCase
         $this->legacyPassword = new Password(['bcrypt' => $this->bcrypt]);
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $proof = $this->password->generate();
 
@@ -40,35 +40,35 @@ class PasswordTest extends TestCase
         $this->assertMatchesRegularExpression('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]+$/', $proof);
     }
 
-    public function testGenerateWithCustomLength()
+    public function testGenerateWithCustomLength(): void
     {
         $this->password->setLength(20);
         $proof = $this->password->generate();
         $this->assertEquals(20, strlen($proof));
     }
 
-    public function testGenerateWithCustomCharset()
+    public function testGenerateWithCustomCharset(): void
     {
         $this->password->setCharset('abcdef123456');
         $proof = $this->password->generate();
         $this->assertMatchesRegularExpression('/^[abcdef123456]+$/', $proof);
     }
 
-    public function testSetLengthValidation()
+    public function testSetLengthValidation(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Password length must be at least 8 characters');
         $this->password->setLength(7);
     }
 
-    public function testSetCharsetValidation()
+    public function testSetCharsetValidation(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Password charset must contain at least 10 characters');
         $this->password->setCharset('123456789');
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $proof = $this->password->generate();
         $hash = $this->password->hash($proof);
@@ -78,7 +78,7 @@ class PasswordTest extends TestCase
         $this->assertStringStartsWith('$argon2id$', $hash); // Default is now argon2
     }
 
-    public function testVerify()
+    public function testVerify(): void
     {
         $proof = $this->password->generate();
         $hash = $this->password->hash($proof);
@@ -87,9 +87,10 @@ class PasswordTest extends TestCase
         $this->assertFalse($this->password->verify('wrongpassword', $hash));
     }
 
-    public function testAddAlgorithm()
+    public function testAddAlgorithm(): void
     {
-        $newBcrypt = new Bcrypt(['cost' => 8]);
+        $newBcrypt = new Bcrypt();
+        $newBcrypt->setCost(8);
         $this->password->addAlgorithm('bcrypt-8', $newBcrypt);
 
         // Verify the algorithm was added
@@ -105,7 +106,7 @@ class PasswordTest extends TestCase
         $this->assertFalse($this->password->verify('wrongpassword', $hash));
     }
 
-    public function testDefaultAlgorithms()
+    public function testDefaultAlgorithms(): void
     {
         // Test that all default algorithms are initialized
         $this->assertInstanceOf(Argon2::class, $this->password->getAlgorithmByName(Password::ARGON2));
@@ -117,14 +118,14 @@ class PasswordTest extends TestCase
         $this->assertInstanceOf(PHPass::class, $this->password->getAlgorithmByName(Password::PHPASS));
     }
 
-    public function testRemoveAlgorithm()
+    public function testRemoveAlgorithm(): void
     {
         // First try to remove the current algorithm (should fail)
         $this->expectException(\Exception::class);
         $this->password->removeAlgorithm(Password::ARGON2); // Argon2 is the default current algorithm
     }
 
-    public function testRemoveNonCurrentAlgorithm()
+    public function testRemoveNonCurrentAlgorithm(): void
     {
         // Should be able to remove a non-current algorithm
         $this->password->removeAlgorithm(Password::MD5);
@@ -134,7 +135,7 @@ class PasswordTest extends TestCase
         $this->password->getAlgorithmByName(Password::MD5);
     }
 
-    public function testGetAlgorithm()
+    public function testGetAlgorithm(): void
     {
         $algorithm = $this->password->getAlgorithmByName(Password::BCRYPT);
         $this->assertInstanceOf(Bcrypt::class, $algorithm);
@@ -143,7 +144,7 @@ class PasswordTest extends TestCase
         $this->password->getAlgorithmByName('non-existent-algorithm');
     }
 
-    public function testAllAlgorithmsWork()
+    public function testAllAlgorithmsWork(): void
     {
         $proof = $this->password->generate();
         $algorithms = [
@@ -165,7 +166,7 @@ class PasswordTest extends TestCase
         }
     }
 
-    public function testLegacyConstructor()
+    public function testLegacyConstructor(): void
     {
         $proof = $this->password->generate();
         $hash = $this->legacyPassword->hash($proof);

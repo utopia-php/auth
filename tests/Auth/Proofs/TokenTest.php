@@ -14,10 +14,12 @@ class TokenTest extends TestCase
     {
         $this->token = new Token(32);
         $this->token->setAlgorithm(new Sha());
-        $this->token->getAlgorithm()->setVersion('sha256');
+        /** @var Sha */
+        $algorithm = $this->token->getAlgorithm();
+        $algorithm->setVersion('sha256');
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $proof = $this->token->generate();
 
@@ -26,7 +28,7 @@ class TokenTest extends TestCase
         $this->assertEquals(32, strlen($proof)); // Default token length
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $proof = $this->token->generate();
         $hash = $this->token->hash($proof);
@@ -37,7 +39,7 @@ class TokenTest extends TestCase
         $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $hash); // SHA-256 hex format
     }
 
-    public function testVerify()
+    public function testVerify(): void
     {
         $proof = $this->token->generate();
         $hash = $this->token->hash($proof);
@@ -46,7 +48,7 @@ class TokenTest extends TestCase
         $this->assertFalse($this->token->verify('wrongtoken', $hash));
     }
 
-    public function testGetLength()
+    public function testGetLength(): void
     {
         $this->assertEquals(32, $this->token->getLength());
 
@@ -54,7 +56,7 @@ class TokenTest extends TestCase
         $this->assertEquals(64, $token->getLength());
     }
 
-    public function testSetLength()
+    public function testSetLength(): void
     {
         $this->token->setLength(64);
         $this->assertEquals(64, $this->token->getLength());
@@ -63,7 +65,7 @@ class TokenTest extends TestCase
         $this->assertEquals(64, strlen($proof));
     }
 
-    public function testSetLengthInvalid()
+    public function testSetLengthInvalid(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Token length must be greater than 0');

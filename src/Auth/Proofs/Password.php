@@ -15,17 +15,11 @@ use Utopia\Auth\Proof;
 class Password extends Proof
 {
     public const ARGON2 = 'argon2';
-
     public const BCRYPT = 'bcrypt';
-
     public const SCRYPT = 'scrypt';
-
     public const SCRYPT_MODIFIED = 'scrypt-modified';
-
     public const SHA = 'sha';
-
     public const MD5 = 'md5';
-
     public const PHPASS = 'phpass';
 
     /**
@@ -46,8 +40,8 @@ class Password extends Proof
     {
         parent::__construct();
 
-        // Initialize default algorithms if none provided
-        if (empty($algorithms)) {
+        // Initialize default algorithms if no algorithms were provided
+        if ($algorithms === []) {
             $algorithms = [
                 self::ARGON2 => new Argon2(),
                 self::BCRYPT => new Bcrypt(),
@@ -60,11 +54,7 @@ class Password extends Proof
         }
 
         $this->algorithms = $algorithms;
-
-        // Set the first algorithm as the default one
-        if (! empty($algorithms)) {
-            $this->algorithm = reset($algorithms);
-        }
+        $this->algorithm = reset($algorithms); // Set the first algorithm as the default one
     }
 
     /**
@@ -164,6 +154,10 @@ class Password extends Proof
     {
         $password = '';
         $max = strlen($this->defaultCharset) - 1;
+        
+        if ($max < 0) {
+            throw new \Exception('Password charset is empty');
+        }
 
         for ($i = 0; $i < $this->defaultLength; $i++) {
             $password .= $this->defaultCharset[random_int(0, $max)];

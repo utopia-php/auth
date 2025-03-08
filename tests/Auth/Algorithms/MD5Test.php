@@ -14,7 +14,7 @@ class MD5Test extends TestCase
         $this->md5 = new MD5();
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $password = 'test123';
         $hash = $this->md5->hash($password);
@@ -27,7 +27,7 @@ class MD5Test extends TestCase
         $this->assertFalse($this->md5->verify('wrongpassword', $hash));
     }
 
-    public function testMultipleHashes()
+    public function testMultipleHashes(): void
     {
         $passwords = ['test123', 'password123', '!@#$%^&*()'];
 
@@ -38,7 +38,7 @@ class MD5Test extends TestCase
         }
     }
 
-    public function testEmptyString()
+    public function testEmptyString(): void
     {
         $password = '';
         $hash = $this->md5->hash($password);
@@ -47,7 +47,7 @@ class MD5Test extends TestCase
         $this->assertTrue($this->md5->verify($password, $hash));
     }
 
-    public function testSpecialCharacters()
+    public function testSpecialCharacters(): void
     {
         $password = '!@#$%^&*()_+-=[]{}|;:,.<>?';
         $hash = $this->md5->hash($password);
@@ -56,7 +56,7 @@ class MD5Test extends TestCase
         $this->assertTrue($this->md5->verify($password, $hash));
     }
 
-    public function testUnicodeCharacters()
+    public function testUnicodeCharacters(): void
     {
         $password = 'Hello 世界';
         $hash = $this->md5->hash($password);

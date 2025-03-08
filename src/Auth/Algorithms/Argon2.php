@@ -46,7 +46,8 @@ class Argon2 extends Algorithm
             throw new \InvalidArgumentException('Memory cost must be >= '.PASSWORD_ARGON2_DEFAULT_MEMORY_COST.' KiB');
         }
 
-        return $this->setOption('memory_cost', $cost);
+        $this->setOption('memory_cost', $cost);
+        return $this;
     }
 
     /**
@@ -63,7 +64,8 @@ class Argon2 extends Algorithm
             throw new \InvalidArgumentException('Time cost must be >= '.PASSWORD_ARGON2_DEFAULT_TIME_COST);
         }
 
-        return $this->setOption('time_cost', $cost);
+        $this->setOption('time_cost', $cost);
+        return $this;
     }
 
     /**
@@ -80,6 +82,7 @@ class Argon2 extends Algorithm
             throw new \InvalidArgumentException('Threads must be >= '.PASSWORD_ARGON2_DEFAULT_THREADS);
         }
 
-        return $this->setOption('threads', $threads);
+        $this->setOption('threads', $threads);
+        return $this;
     }
 }

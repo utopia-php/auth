@@ -14,7 +14,7 @@ class ScryptTest extends TestCase
         $this->scrypt = new Scrypt();
     }
 
-    public function testHash()
+    public function testHash(): void
     {
         $password = 'test123';
         $hash = $this->scrypt->hash($password);
@@ -25,7 +25,7 @@ class ScryptTest extends TestCase
         $this->assertFalse($this->scrypt->verify('wrongpassword', $hash));
     }
 
-    public function testCustomOptions()
+    public function testCustomOptions(): void
     {
         $this->scrypt->setCpuCost(16)
             ->setMemoryCost(15)

@@ -23,6 +23,7 @@ class Scrypt extends Algorithm
      */
     public function hash(string $value): string
     {
+        // @phpstan-ignore-next-line
         return \scrypt(
             $value,
             $this->getOption('salt'),
@@ -51,11 +52,12 @@ class Scrypt extends Algorithm
      */
     public function setCpuCost(int $cost): self
     {
-        if ($cost <= 1 || ! ($cost & ($cost - 1)) === 0) {
+        if ($cost <= 1 || ($cost & ($cost - 1)) !== 0) {
             throw new \InvalidArgumentException('CPU cost must be > 1 and a power of 2');
         }
 
-        return $this->setOption('costCpu', $cost);
+        $this->setOption('costCpu', $cost);
+        return $this;
     }
 
     /**
@@ -72,7 +74,8 @@ class Scrypt extends Algorithm
             throw new \InvalidArgumentException('Memory cost must be >= 1');
         }
 
-        return $this->setOption('costMemory', $cost);
+        $this->setOption('costMemory', $cost);
+        return $this;
     }
 
     /**
@@ -89,7 +92,8 @@ class Scrypt extends Algorithm
             throw new \InvalidArgumentException('Parallel cost must be >= 1');
         }
 
-        return $this->setOption('costParallel', $cost);
+        $this->setOption('costParallel', $cost);
+        return $this;
     }
 
     /**
@@ -106,7 +110,8 @@ class Scrypt extends Algorithm
             throw new \InvalidArgumentException('Length must be >= 16 bytes');
         }
 
-        return $this->setOption('length', $length);
+        $this->setOption('length', $length);
+        return $this;
     }
 
     /**
@@ -123,6 +128,7 @@ class Scrypt extends Algorithm
             throw new \InvalidArgumentException('Salt cannot be empty');
         }
 
-        return $this->setOption('salt', $salt);
+        $this->setOption('salt', $salt);
+        return $this;
     }
 }

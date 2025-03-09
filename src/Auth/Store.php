@@ -39,11 +39,13 @@ class Store
      * Encode store data to base64 string
      *
      * @return string
+     *
      * @throws \JsonException
      */
     public function encode(): string
     {
         $json = json_encode($this->data, JSON_THROW_ON_ERROR);
+
         return base64_encode($json);
     }
 

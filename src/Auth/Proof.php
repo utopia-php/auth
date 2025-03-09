@@ -2,41 +2,41 @@
 
 namespace Utopia\Auth;
 
-use Utopia\Auth\Algorithms\Argon2;
+use Utopia\Auth\Hashes\Argon2;
 
 abstract class Proof
 {
     /**
-     * @var Algorithm
+     * @var Hash
      */
-    protected Algorithm $algorithm;
+    protected Hash $hash;
 
     public function __construct()
     {
-        $this->algorithm = new Argon2();
+        $this->hash = new Argon2();
     }
 
     /**
-     * Set custom algorithm
+     * Set custom hash
      *
-     * @param  Algorithm  $algorithm
+     * @param  Hash  $hash
      * @return self
      */
-    public function setAlgorithm(Algorithm $algorithm): self
+    public function setHash(Hash $hash): self
     {
-        $this->algorithm = $algorithm;
+        $this->hash = $hash;
 
         return $this;
     }
 
     /**
-     * Get current algorithm
+     * Get current hash
      *
-     * @return Algorithm
+     * @return Hash
      */
-    public function getAlgorithm(): Algorithm
+    public function getHash(): Hash
     {
-        return $this->algorithm;
+        return $this->hash;
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class Proof
      */
     public function hash(string $proof): string
     {
-        return $this->algorithm->hash($proof);
+        return $this->hash->hash($proof);
     }
 
     /**
@@ -66,6 +66,6 @@ abstract class Proof
      */
     public function verify(string $proof, string $hash): bool
     {
-        return $this->algorithm->verify($proof, $hash);
+        return $this->hash->verify($proof, $hash);
     }
 }

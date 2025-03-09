@@ -1,10 +1,10 @@
 <?php
 
-namespace Utopia\Auth\Algorithms;
+namespace Utopia\Auth\Hashes;
 
-use Utopia\Auth\Algorithm;
+use Utopia\Auth\Hash;
 
-class PHPass extends Algorithm
+class PHPass extends Hash
 {
     /**
      * Alphabet used in itoa64 conversions.

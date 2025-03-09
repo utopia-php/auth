@@ -1,9 +1,9 @@
 <?php
 
-namespace Utopia\Tests\Auth\Algorithms;
+namespace Utopia\Tests\Auth\Hashes;
 
 use PHPUnit\Framework\TestCase;
-use Utopia\Auth\Algorithms\Scrypt;
+use Utopia\Auth\Hashes\Scrypt;
 
 class ScryptTest extends TestCase
 {

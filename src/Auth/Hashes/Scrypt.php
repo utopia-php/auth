@@ -1,10 +1,10 @@
 <?php
 
-namespace Utopia\Auth\Algorithms;
+namespace Utopia\Auth\Hashes;
 
-use Utopia\Auth\Algorithm;
+use Utopia\Auth\Hash;
 
-class Scrypt extends Algorithm
+class Scrypt extends Hash
 {
     /**
      * Constructor

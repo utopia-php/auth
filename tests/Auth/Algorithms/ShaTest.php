@@ -1,9 +1,9 @@
 <?php
 
-namespace Utopia\Tests\Auth\Algorithms;
+namespace Utopia\Tests\Auth\Hashes;
 
 use PHPUnit\Framework\TestCase;
-use Utopia\Auth\Algorithms\Sha;
+use Utopia\Auth\Hashes\Sha;
 
 class ShaTest extends TestCase
 {

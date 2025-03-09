@@ -21,4 +21,12 @@ class MD5 extends Hash
     {
         return $this->hash($value) === $hash;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'md5';
+    }
 }

@@ -61,4 +61,11 @@ abstract class Hash
      * @return bool
      */
     abstract public function verify(string $value, string $hash): bool;
+
+    /**
+     * Get the name of the hash algorithm
+     *
+     * @return string
+     */
+    abstract public function getName(): string;
 }

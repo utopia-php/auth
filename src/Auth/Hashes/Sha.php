@@ -86,4 +86,12 @@ class Sha extends Hash
     {
         return $this->hash($value) === $hash;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'sha';
+    }
 }

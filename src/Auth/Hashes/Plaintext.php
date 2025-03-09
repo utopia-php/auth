@@ -21,4 +21,12 @@ class Plaintext extends Hash
     {
         return $this->hash($value) === $hash;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'plaintext';
+    }
 }

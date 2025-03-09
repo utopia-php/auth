@@ -39,4 +39,9 @@ class ShaTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->sha->setVersion('invalid-version');
     }
+
+    public function testGetName(): void
+    {
+        $this->assertEquals('sha', $this->sha->getName());
+    }
 }

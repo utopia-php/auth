@@ -164,4 +164,12 @@ class ScryptModified extends Hash
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'scryptMod';
+    }
 }

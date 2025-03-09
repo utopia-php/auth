@@ -64,4 +64,9 @@ class MD5Test extends TestCase
         $this->assertEquals(md5($password), $hash);
         $this->assertTrue($this->md5->verify($password, $hash));
     }
+
+    public function testGetName(): void
+    {
+        $this->assertEquals('md5', $this->md5->getName());
+    }
 }

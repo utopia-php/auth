@@ -76,4 +76,9 @@ class Argon2Test extends TestCase
         $hash = $this->argon2->hash($password);
         $this->assertTrue($this->argon2->verify($password, $hash));
     }
+
+    public function testGetName(): void
+    {
+        $this->assertEquals('argon2', $this->argon2->getName());
+    }
 }

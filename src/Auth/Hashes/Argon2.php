@@ -88,4 +88,12 @@ class Argon2 extends Hash
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'argon2';
+    }
 }

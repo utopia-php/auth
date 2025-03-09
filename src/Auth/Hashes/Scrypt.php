@@ -139,4 +139,12 @@ class Scrypt extends Hash
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'scrypt';
+    }
 }

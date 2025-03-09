@@ -40,7 +40,7 @@ abstract class Hash
      *
      * @return array<string, mixed> Hash-specific options
      */
-    protected function getOptions(): array
+    public function getOptions(): array
     {
         return $this->options;
     }

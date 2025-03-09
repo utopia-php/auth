@@ -1,9 +1,9 @@
 <?php
 
-namespace Utopia\Tests\Auth\Algorithms;
+namespace Utopia\Tests\Auth\Hashes;
 
 use PHPUnit\Framework\TestCase;
-use Utopia\Auth\Algorithms\MD5;
+use Utopia\Auth\Hashes\MD5;
 
 class MD5Test extends TestCase
 {

@@ -2,15 +2,15 @@
 
 namespace Utopia\Auth;
 
-abstract class Algorithm
+abstract class Hash
 {
     /**
-     * @var array<string, mixed> Algorithm-specific options
+     * @var array<string, mixed> Hash-specific options
      */
     protected array $options = [];
 
     /**
-     * Set algorithm options
+     * Set hashing options
      *
      * @param  string  $key The option key to set
      * @param  mixed  $value The value to set for the option
@@ -36,9 +36,9 @@ abstract class Algorithm
     }
 
     /**
-     * Get algorithm options
+     * Get hashing options
      *
-     * @return array<string, mixed> Algorithm-specific options
+     * @return array<string, mixed> Hash-specific options
      */
     protected function getOptions(): array
     {

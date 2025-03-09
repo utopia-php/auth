@@ -2,14 +2,14 @@
 
 namespace Utopia\Auth\Proofs;
 
-use Utopia\Auth\Algorithm;
-use Utopia\Auth\Algorithms\Argon2;
-use Utopia\Auth\Algorithms\Bcrypt;
-use Utopia\Auth\Algorithms\MD5;
-use Utopia\Auth\Algorithms\PHPass;
-use Utopia\Auth\Algorithms\Scrypt;
-use Utopia\Auth\Algorithms\ScryptModified;
-use Utopia\Auth\Algorithms\Sha;
+use Utopia\Auth\Hash;
+use Utopia\Auth\Hashes\Argon2;
+use Utopia\Auth\Hashes\Bcrypt;
+use Utopia\Auth\Hashes\MD5;
+use Utopia\Auth\Hashes\PHPass;
+use Utopia\Auth\Hashes\Scrypt;
+use Utopia\Auth\Hashes\ScryptModified;
+use Utopia\Auth\Hashes\Sha;
 use Utopia\Auth\Proof;
 
 class Password extends Proof
@@ -29,26 +29,26 @@ class Password extends Proof
     public const PHPASS = 'phpass';
 
     /**
-     * @var array<string, Algorithm>
+     * @var array<string, Hash>
      */
-    protected array $algorithms = [];
+    protected array $hashes = [];
 
     protected int $defaultLength = 16;
 
     protected string $defaultCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
 
     /**
-     * @param  array<string, Algorithm>  $algorithms
+     * @param  array<string, Hash>  $hashes
      *
      * @throws \Exception
      */
-    public function __construct(array $algorithms = [])
+    public function __construct(array $hashes = [])
     {
         parent::__construct();
 
-        // Initialize default algorithms if no algorithms were provided
-        if ($algorithms === []) {
-            $algorithms = [
+        // Initialize default hashes if no hashes were provided
+        if ($hashes === []) {
+            $hashes = [
                 self::ARGON2 => new Argon2(),
                 self::BCRYPT => new Bcrypt(),
                 self::SCRYPT => new Scrypt(),
@@ -59,62 +59,62 @@ class Password extends Proof
             ];
         }
 
-        $this->algorithms = $algorithms;
-        $this->algorithm = reset($algorithms); // Set the first algorithm as the default one
+        $this->hashes = $hashes;
+        $this->hash = reset($hashes); // Set the first hash as the default one
     }
 
     /**
-     * Add a new hashing algorithm
+     * Add a new hashing hash
      *
      * @param  string  $name
-     * @param  Algorithm  $algorithm
+     * @param  Hash  $hash
      * @return self
      */
-    public function addAlgorithm(string $name, Algorithm $algorithm): self
+    public function addHash(string $name, Hash $hash): self
     {
-        $this->algorithms[$name] = $algorithm;
+        $this->hashes[$name] = $hash;
 
         return $this;
     }
 
     /**
-     * Remove a hashing algorithm
+     * Remove a hashing hash
      *
      * @param  string  $name
      * @return self
      *
      * @throws \Exception
      */
-    public function removeAlgorithm(string $name): self
+    public function removeHash(string $name): self
     {
-        if (! isset($this->algorithms[$name])) {
-            throw new \Exception("Algorithm '{$name}' not found");
+        if (! isset($this->hashes[$name])) {
+            throw new \Exception("Hash '{$name}' not found");
         }
 
-        if ($this->algorithm === $this->algorithms[$name]) {
-            throw new \Exception('Cannot remove current algorithm');
+        if ($this->hash === $this->hashes[$name]) {
+            throw new \Exception('Cannot remove current hash');
         }
 
-        unset($this->algorithms[$name]);
+        unset($this->hashes[$name]);
 
         return $this;
     }
 
     /**
-     * Get a specific hashing algorithm by name
+     * Get a specific hashing hash by name
      *
      * @param  string  $name
-     * @return Algorithm
+     * @return Hash
      *
      * @throws \Exception
      */
-    public function getAlgorithmByName(string $name): Algorithm
+    public function getHashByName(string $name): Hash
     {
-        if (! isset($this->algorithms[$name])) {
-            throw new \Exception("Algorithm '{$name}' not found");
+        if (! isset($this->hashes[$name])) {
+            throw new \Exception("Hash '{$name}' not found");
         }
 
-        return $this->algorithms[$name];
+        return $this->hashes[$name];
     }
 
     /**

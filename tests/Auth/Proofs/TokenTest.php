@@ -3,7 +3,7 @@
 namespace Utopia\Tests\Auth\Proofs;
 
 use PHPUnit\Framework\TestCase;
-use Utopia\Auth\Algorithms\Sha;
+use Utopia\Auth\Hashes\Sha;
 use Utopia\Auth\Proofs\Token;
 
 class TokenTest extends TestCase
@@ -13,10 +13,10 @@ class TokenTest extends TestCase
     protected function setUp(): void
     {
         $this->token = new Token(32);
-        $this->token->setAlgorithm(new Sha());
+        $this->token->setHash(new Sha());
         /** @var Sha */
-        $algorithm = $this->token->getAlgorithm();
-        $algorithm->setVersion('sha256');
+        $hash = $this->token->getHash();
+        $hash->setVersion('sha256');
     }
 
     public function testGenerate(): void

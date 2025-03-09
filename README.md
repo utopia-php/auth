@@ -21,7 +21,7 @@ Utopia Framework requires PHP 8.0 or later. We recommend using the latest PHP ve
 
 ## Features
 
-### Supported Hashing Algorithms
+### Supported Hashing Hashes
 
 - **Argon2** - Modern, secure, and recommended password hashing algorithm
 - **Bcrypt** - Well-established and secure password hashing
@@ -41,8 +41,8 @@ Utopia Framework requires PHP 8.0 or later. We recommend using the latest PHP ve
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Utopia\Auth\Proofs\Password;
-use Utopia\Auth\Algorithms\Argon2;
-use Utopia\Auth\Algorithms\Bcrypt;
+use Utopia\Auth\Hashes\Argon2;
+use Utopia\Auth\Hashes\Bcrypt;
 
 // Initialize password authentication with default algorithms
 $password = new Password();
@@ -57,7 +57,7 @@ $isValid = $password->verify('user-password', $hash);
 $bcrypt = new Bcrypt();
 $bcrypt->setCost(12); // Increase cost factor for better security
 
-$password->setAlgorithm($bcrypt);
+$password->setHash($bcrypt);
 $hash = $password->hash('user-password');
 ```
 
@@ -109,13 +109,13 @@ $hashedPhrase = $phrase->hash($authPhrase);
 $isValid = $phrase->verify($authPhrase, $hashedPhrase);
 ```
 
-### Advanced Algorithm Configuration
+### Advanced Hash Configuration
 
 ```php
 <?php
 
-use Utopia\Auth\Algorithms\Scrypt;
-use Utopia\Auth\Algorithms\Argon2;
+use Utopia\Auth\Hashes\Scrypt;
+use Utopia\Auth\Hashes\Argon2;
 
 // Configure Scrypt parameters
 $scrypt = new Scrypt();

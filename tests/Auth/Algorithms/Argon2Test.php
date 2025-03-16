@@ -26,12 +26,6 @@ class Argon2Test extends TestCase
         $this->assertFalse($this->argon2->verify('wrongpassword', $hash));
     }
 
-    public function testMemoryCost(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->argon2->setMemoryCost(1); // Should throw exception for too low memory cost
-    }
-
     public function testValidMemoryCost(): void
     {
         $cost = PASSWORD_ARGON2_DEFAULT_MEMORY_COST + 1024;
@@ -43,12 +37,6 @@ class Argon2Test extends TestCase
         $this->assertTrue($this->argon2->verify($password, $hash));
     }
 
-    public function testTimeCost(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->argon2->setTimeCost(0); // Should throw exception for too low time cost
-    }
-
     public function testValidTimeCost(): void
     {
         $cost = PASSWORD_ARGON2_DEFAULT_TIME_COST + 1;
@@ -58,12 +46,6 @@ class Argon2Test extends TestCase
         $password = 'test123';
         $hash = $this->argon2->hash($password);
         $this->assertTrue($this->argon2->verify($password, $hash));
-    }
-
-    public function testThreads(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->argon2->setThreads(0); // Should throw exception for too low thread count
     }
 
     public function testValidThreads(): void

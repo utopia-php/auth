@@ -42,10 +42,6 @@ class Argon2 extends Hash
      */
     public function setMemoryCost(int $cost): self
     {
-        if ($cost < PASSWORD_ARGON2_DEFAULT_MEMORY_COST) {
-            throw new \InvalidArgumentException('Memory cost must be >= '.PASSWORD_ARGON2_DEFAULT_MEMORY_COST.' KiB');
-        }
-
         $this->setOption('memory_cost', $cost);
 
         return $this;
@@ -61,10 +57,6 @@ class Argon2 extends Hash
      */
     public function setTimeCost(int $cost): self
     {
-        if ($cost < PASSWORD_ARGON2_DEFAULT_TIME_COST) {
-            throw new \InvalidArgumentException('Time cost must be >= '.PASSWORD_ARGON2_DEFAULT_TIME_COST);
-        }
-
         $this->setOption('time_cost', $cost);
 
         return $this;
@@ -80,10 +72,6 @@ class Argon2 extends Hash
      */
     public function setThreads(int $threads): self
     {
-        if ($threads < PASSWORD_ARGON2_DEFAULT_THREADS) {
-            throw new \InvalidArgumentException('Threads must be >= '.PASSWORD_ARGON2_DEFAULT_THREADS);
-        }
-
         $this->setOption('threads', $threads);
 
         return $this;

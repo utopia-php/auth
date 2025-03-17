@@ -11,8 +11,8 @@ class Argon2 extends Hash
      */
     public function __construct()
     {
-        $this->setOption('memory_cost', 65536);
-        $this->setOption('time_cost', 4);
+        $this->setOption('memoryCost', 65536);
+        $this->setOption('timeCost', 4);
         $this->setOption('threads', 3);
     }
 
@@ -42,7 +42,7 @@ class Argon2 extends Hash
      */
     public function setMemoryCost(int $cost): self
     {
-        $this->setOption('memory_cost', $cost);
+        $this->setOption('memoryCost', $cost);
 
         return $this;
     }
@@ -57,7 +57,7 @@ class Argon2 extends Hash
      */
     public function setTimeCost(int $cost): self
     {
-        $this->setOption('time_cost', $cost);
+        $this->setOption('timeCost', $cost);
 
         return $this;
     }

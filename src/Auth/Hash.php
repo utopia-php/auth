@@ -16,9 +16,24 @@ abstract class Hash
      * @param  mixed  $value The value to set for the option
      * @return self
      */
-    protected function setOption(string $key, mixed $value): self
+    public function setOption(string $key, mixed $value): self
     {
         $this->options[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set multiple hashing options at once
+     *
+     * @param  array<string, mixed>  $options Array of options to set
+     * @return self
+     */
+    public function setOptions(array $options): self
+    {
+        foreach ($options as $key => $value) {
+            $this->setOption($key, $value);
+        }
 
         return $this;
     }
@@ -30,7 +45,7 @@ abstract class Hash
      * @param  mixed  $default Default value if option doesn't exist
      * @return mixed The option value or default if not found
      */
-    protected function getOption(string $key, mixed $default = null): mixed
+    public function getOption(string $key, mixed $default = null): mixed
     {
         return $this->options[$key] ?? $default;
     }

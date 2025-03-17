@@ -170,6 +170,6 @@ class ScryptModified extends Hash
      */
     public function getName(): string
     {
-        return 'scryptMod';
+        return 'scrypt-modified';
     }
 }

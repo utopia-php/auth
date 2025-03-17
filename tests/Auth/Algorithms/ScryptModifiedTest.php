@@ -39,6 +39,6 @@ class ScryptModifiedTest extends TestCase
 
     public function testGetName(): void
     {
-        $this->assertEquals('scryptMod', $this->scryptModified->getName());
+        $this->assertEquals('scrypt-modified', $this->scryptModified->getName());
     }
 }

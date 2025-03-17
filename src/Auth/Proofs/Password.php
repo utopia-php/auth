@@ -20,7 +20,7 @@ class Password extends Proof
 
     public const SCRYPT = 'scrypt';
 
-    public const SCRYPT_MODIFIED = 'scrypt-modified';
+    public const SCRYPT_MODIFIED = 'scryptMod';
 
     public const SHA = 'sha';
 

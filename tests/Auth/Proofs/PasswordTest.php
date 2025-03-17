@@ -162,4 +162,42 @@ class PasswordTest extends TestCase
             $this->assertFalse($this->password->verify('wrongpassword', $hash), "Hash {$algo} failed wrong password test");
         }
     }
+
+    public function testCreateHash(): void
+    {
+        // Test default hash creation
+        $argon2Hash = Password::createHash(Password::ARGON2);
+        $this->assertInstanceOf(Argon2::class, $argon2Hash);
+
+        $bcryptHash = Password::createHash(Password::BCRYPT);
+        $this->assertInstanceOf(Bcrypt::class, $bcryptHash);
+
+        // Test hash creation with options
+        $customBcrypt = Password::createHash(Password::BCRYPT, [
+            'cost' => 8
+        ]);
+        $this->assertInstanceOf(Bcrypt::class, $customBcrypt);
+        
+        $customScrypt = Password::createHash(Password::SCRYPT, [
+            'cpu_cost' => 8192,
+            'memory_cost' => 4,
+            'parallel_cost' => 1,
+            'key_length' => 32
+        ]);
+        $this->assertInstanceOf(Scrypt::class, $customScrypt);
+
+        // Test invalid hash type
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unsupported hash type: invalid-hash');
+        Password::createHash('invalid-hash');
+    }
+
+    public function testCreateHashWithInvalidOptions(): void
+    {
+        // Test that invalid options are ignored
+        $hash = Password::createHash(Password::BCRYPT, [
+            'invalid_option' => 'value'
+        ]);
+        $this->assertInstanceOf(Bcrypt::class, $hash);
+    }
 }

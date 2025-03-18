@@ -29,7 +29,7 @@ class Sha extends Hash
      */
     public function __construct()
     {
-        $this->setOption('version', 'sha3-512');
+        $this->setOption('version', 'sha256');
     }
 
     /**

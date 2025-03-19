@@ -16,6 +16,8 @@ class ScryptModified extends Hash
         $saltSeparator = random_bytes(16);
         $signerKey = random_bytes(32);
 
+        $this->setOption('type', $this->getName());
+
         // Set default options with secure random values
         $this->setOption('salt', base64_encode($salt));
         $this->setOption('saltSeparator', base64_encode($saltSeparator));

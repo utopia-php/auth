@@ -11,6 +11,7 @@ class Bcrypt extends Hash
      */
     public function __construct()
     {
+        $this->setOption('type', $this->getName());
         $this->setOption('cost', 8);
     }
 

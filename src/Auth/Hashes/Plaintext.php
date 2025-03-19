@@ -7,6 +7,14 @@ use Utopia\Auth\Hash;
 class Plaintext extends Hash
 {
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->setOption('type', $this->getName());
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function hash(string $value): string

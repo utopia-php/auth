@@ -11,6 +11,7 @@ class Scrypt extends Hash
      */
     public function __construct()
     {
+        $this->setOption('type', $this->getName());
         $this->setOption('costCpu', 8);
         $this->setOption('costMemory', 14);
         $this->setOption('costParallel', 1);
@@ -138,5 +139,13 @@ class Scrypt extends Hash
         $this->setOption('salt', $salt);
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'scrypt';
     }
 }

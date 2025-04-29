@@ -11,8 +11,9 @@ class Argon2 extends Hash
      */
     public function __construct()
     {
-        $this->setOption('memory_cost', 65536);
-        $this->setOption('time_cost', 4);
+        $this->setOption('type', $this->getName());
+        $this->setOption('memoryCost', 65536);
+        $this->setOption('timeCost', 4);
         $this->setOption('threads', 3);
     }
 
@@ -42,11 +43,7 @@ class Argon2 extends Hash
      */
     public function setMemoryCost(int $cost): self
     {
-        if ($cost < PASSWORD_ARGON2_DEFAULT_MEMORY_COST) {
-            throw new \InvalidArgumentException('Memory cost must be >= '.PASSWORD_ARGON2_DEFAULT_MEMORY_COST.' KiB');
-        }
-
-        $this->setOption('memory_cost', $cost);
+        $this->setOption('memoryCost', $cost);
 
         return $this;
     }
@@ -61,11 +58,7 @@ class Argon2 extends Hash
      */
     public function setTimeCost(int $cost): self
     {
-        if ($cost < PASSWORD_ARGON2_DEFAULT_TIME_COST) {
-            throw new \InvalidArgumentException('Time cost must be >= '.PASSWORD_ARGON2_DEFAULT_TIME_COST);
-        }
-
-        $this->setOption('time_cost', $cost);
+        $this->setOption('timeCost', $cost);
 
         return $this;
     }
@@ -80,12 +73,16 @@ class Argon2 extends Hash
      */
     public function setThreads(int $threads): self
     {
-        if ($threads < PASSWORD_ARGON2_DEFAULT_THREADS) {
-            throw new \InvalidArgumentException('Threads must be >= '.PASSWORD_ARGON2_DEFAULT_THREADS);
-        }
-
         $this->setOption('threads', $threads);
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'argon2';
     }
 }

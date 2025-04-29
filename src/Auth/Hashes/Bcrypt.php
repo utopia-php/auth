@@ -11,6 +11,7 @@ class Bcrypt extends Hash
      */
     public function __construct()
     {
+        $this->setOption('type', $this->getName());
         $this->setOption('cost', 8);
     }
 
@@ -47,5 +48,13 @@ class Bcrypt extends Hash
         $this->setOption('cost', $cost);
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'bcrypt';
     }
 }

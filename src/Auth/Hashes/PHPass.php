@@ -21,6 +21,7 @@ class PHPass extends Hash
             $randomState .= getmypid();
         }
 
+        $this->setOption('type', $this->getName());
         $this->setOption('iteration_count_log2', 8);
         $this->setOption('portable_hashes', false);
         $this->setOption('random_state', $randomState);
@@ -252,5 +253,13 @@ class PHPass extends Hash
         $this->setOption('portable_hashes', $portable);
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'phpass';
     }
 }

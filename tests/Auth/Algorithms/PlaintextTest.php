@@ -52,4 +52,9 @@ class PlaintextTest extends TestCase
         $this->assertEquals($password, $hash);
         $this->assertTrue($this->plaintext->verify($password, $hash));
     }
+
+    public function testGetName(): void
+    {
+        $this->assertEquals('plaintext', $this->plaintext->getName());
+    }
 }

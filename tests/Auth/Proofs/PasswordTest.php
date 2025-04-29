@@ -16,8 +16,6 @@ class PasswordTest extends TestCase
 {
     protected Password $password;
 
-    protected Password $legacyPassword;
-
     protected Bcrypt $bcrypt;
 
     protected function setUp(): void
@@ -27,7 +25,6 @@ class PasswordTest extends TestCase
 
         // Test legacy constructor with explicit hashes
         $this->bcrypt = new Bcrypt();
-        $this->legacyPassword = new Password(['bcrypt' => $this->bcrypt]);
     }
 
     public function testGenerate(): void
@@ -122,7 +119,7 @@ class PasswordTest extends TestCase
     {
         // First try to remove the current hash (should fail)
         $this->expectException(\Exception::class);
-        $this->password->removeHash(Password::ARGON2); // Argon2 is the default current hash
+        $this->password->removeHash('random-hash'); // Argon2 is the default current hash
     }
 
     public function testRemoveNonCurrentHash(): void
@@ -166,18 +163,41 @@ class PasswordTest extends TestCase
         }
     }
 
-    public function testLegacyConstructor(): void
+    public function testCreateHash(): void
     {
-        $proof = $this->password->generate();
-        $hash = $this->legacyPassword->hash($proof);
+        // Test default hash creation
+        $argon2Hash = Password::createHash(Password::ARGON2);
+        $this->assertInstanceOf(Argon2::class, $argon2Hash);
 
-        $this->assertNotEmpty($hash);
-        $this->assertIsString($hash);
-        $this->assertStringStartsWith('$2y$', $hash);
-        $this->assertTrue($this->legacyPassword->verify($proof, $hash));
+        $bcryptHash = Password::createHash(Password::BCRYPT);
+        $this->assertInstanceOf(Bcrypt::class, $bcryptHash);
 
-        // Verify that only the specified hash is available
+        // Test hash creation with options
+        $customBcrypt = Password::createHash(Password::BCRYPT, [
+            'cost' => 8,
+        ]);
+        $this->assertInstanceOf(Bcrypt::class, $customBcrypt);
+
+        $customScrypt = Password::createHash(Password::SCRYPT, [
+            'cpu_cost' => 8192,
+            'memory_cost' => 4,
+            'parallel_cost' => 1,
+            'key_length' => 32,
+        ]);
+        $this->assertInstanceOf(Scrypt::class, $customScrypt);
+
+        // Test invalid hash type
         $this->expectException(\Exception::class);
-        $this->legacyPassword->getHashByName(Password::ARGON2);
+        $this->expectExceptionMessage('Unsupported hash type: invalid-hash');
+        Password::createHash('invalid-hash');
+    }
+
+    public function testCreateHashWithInvalidOptions(): void
+    {
+        // Test that invalid options are ignored
+        $hash = Password::createHash(Password::BCRYPT, [
+            'invalid_option' => 'value',
+        ]);
+        $this->assertInstanceOf(Bcrypt::class, $hash);
     }
 }

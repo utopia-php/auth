@@ -7,28 +7,49 @@ use Utopia\Auth\Store;
 
 class StoreTest extends TestCase
 {
-    public function testGetAndSet(): void
+    public function testGetAndSetProperty(): void
     {
         $store = new Store();
 
         // Test setting and getting a string
-        $store->set('name', 'John Doe');
-        $this->assertEquals('John Doe', $store->get('name'));
+        $store->setProperty('name', 'John Doe');
+        $this->assertEquals('John Doe', $store->getProperty('name'));
 
         // Test setting and getting different types
-        $store->set('age', 30)
-              ->set('active', true)
-              ->set('scores', [95, 87, 92])
-              ->set('details', ['city' => 'New York', 'country' => 'USA']);
+        $store->setProperty('age', 30)
+              ->setProperty('active', true)
+              ->setProperty('scores', [95, 87, 92])
+              ->setProperty('details', ['city' => 'New York', 'country' => 'USA']);
 
-        $this->assertEquals(30, $store->get('age'));
-        $this->assertTrue($store->get('active'));
-        $this->assertEquals([95, 87, 92], $store->get('scores'));
-        $this->assertEquals(['city' => 'New York', 'country' => 'USA'], $store->get('details'));
+        $this->assertEquals(30, $store->getProperty('age'));
+        $this->assertTrue($store->getProperty('active'));
+        $this->assertEquals([95, 87, 92], $store->getProperty('scores'));
+        $this->assertEquals(['city' => 'New York', 'country' => 'USA'], $store->getProperty('details'));
 
         // Test default value for non-existent key
-        $this->assertNull($store->get('nonexistent'));
-        $this->assertEquals('default', $store->get('nonexistent', 'default'));
+        $this->assertNull($store->getProperty('nonexistent'));
+        $this->assertEquals('default', $store->getProperty('nonexistent', 'default'));
+    }
+
+    public function testGetAndSetKey(): void
+    {
+        $store = new Store();
+
+        // Test initial key is null
+        $this->assertNull($store->getKey());
+
+        // Test setting and getting a key
+        $store->setKey('test-key');
+        $this->assertEquals('test-key', $store->getKey());
+
+        // Test setting key to null
+        $store->setKey(null);
+        $this->assertNull($store->getKey());
+
+        // Test method chaining
+        $store->setKey('new-key')->setProperty('test', 'value');
+        $this->assertEquals('new-key', $store->getKey());
+        $this->assertEquals('value', $store->getProperty('test'));
     }
 
     public function testEncodeAndDecode(): void
@@ -42,10 +63,11 @@ class StoreTest extends TestCase
             'details' => ['city' => 'New York', 'country' => 'USA'],
         ];
 
-        // Set multiple values
+        // Set multiple values and key
         foreach ($data as $key => $value) {
-            $store->set($key, $value);
+            $store->setProperty($key, $value);
         }
+        $store->setKey('test-key');
 
         // Encode the store
         $encoded = $store->encode();
@@ -61,7 +83,7 @@ class StoreTest extends TestCase
 
         // Verify all data was preserved
         foreach ($data as $key => $value) {
-            $this->assertEquals($value, $newStore->get($key));
+            $this->assertEquals($value, $store->getProperty($key));
         }
     }
 
@@ -71,23 +93,23 @@ class StoreTest extends TestCase
 
         // Test decoding invalid base64
         $store->decode('invalid-base64');
-        $this->assertNull($store->get('any'));
+        $this->assertNull($store->getProperty('any'));
 
         // Test decoding valid base64 but invalid JSON
         $store->decode(base64_encode('invalid-json'));
-        $this->assertNull($store->get('any'));
+        $this->assertNull($store->getProperty('any'));
 
         // Test decoding valid base64 and JSON, but not an array
         $json = json_encode('string', JSON_THROW_ON_ERROR);
         $store->decode(base64_encode($json));
-        $this->assertNull($store->get('any'));
+        $this->assertNull($store->getProperty('any'));
     }
 
     public function testEncodeWithInvalidData(): void
     {
         $store = new Store();
         // Create an invalid UTF-8 string that will cause json_encode to fail
-        $store->set('invalid', "\xFF");
+        $store->setProperty('invalid', "\xFF");
 
         $this->expectException(\JsonException::class);
         $store->encode();

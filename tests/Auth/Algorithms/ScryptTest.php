@@ -38,4 +38,9 @@ class ScryptTest extends TestCase
 
         $this->assertTrue($this->scrypt->verify($password, $hash));
     }
+
+    public function testGetName(): void
+    {
+        $this->assertEquals('scrypt', $this->scrypt->getName());
+    }
 }

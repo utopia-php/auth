@@ -82,4 +82,9 @@ class PHPassTest extends TestCase
         $hash = $this->phpass->hash($password);
         $this->assertTrue($this->phpass->verify($password, $hash));
     }
+
+    public function testGetName(): void
+    {
+        $this->assertEquals('phpass', $this->phpass->getName());
+    }
 }

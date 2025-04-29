@@ -10,27 +10,55 @@ class Store
     protected array $data = [];
 
     /**
-     * Get a value from the store
+     * @var string|null
+     */
+    protected ?string $key = null;
+
+    /**
+     * Get a property from the store
      *
      * @param  string  $key
      * @param  mixed  $default
      * @return mixed
      */
-    public function get(string $key, mixed $default = null): mixed
+    public function getProperty(string $key, mixed $default = null): mixed
     {
         return $this->data[$key] ?? $default;
     }
 
     /**
-     * Set a value in the store
+     * Set a property in the store
      *
      * @param  string  $key
      * @param  mixed  $value
      * @return self
      */
-    public function set(string $key, mixed $value): self
+    public function setProperty(string $key, mixed $value): self
     {
         $this->data[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the store key
+     *
+     * @return string|null
+     */
+    public function getKey(): ?string
+    {
+        return $this->key;
+    }
+
+    /**
+     * Set the store key
+     *
+     * @param  string|null  $key
+     * @return self
+     */
+    public function setKey(?string $key): self
+    {
+        $this->key = $key;
 
         return $this;
     }
@@ -66,7 +94,7 @@ class Store
             $json = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
             if (is_array($json)) {
                 foreach ($json as $key => $value) {
-                    $this->set($key, $value);
+                    $this->setProperty($key, $value);
                 }
             }
         } catch (\JsonException $e) {

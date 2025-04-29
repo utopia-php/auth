@@ -29,7 +29,7 @@ class Sha extends Hash
      */
     public function __construct()
     {
-        $this->setOption('version', 'sha3-512');
+        $this->setOption('version', 'sha256');
     }
 
     /**
@@ -85,5 +85,13 @@ class Sha extends Hash
     public function verify(string $value, string $hash): bool
     {
         return $this->hash($value) === $hash;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'sha';
     }
 }

@@ -20,7 +20,7 @@ class Password extends Proof
 
     public const SCRYPT = 'scrypt';
 
-    public const SCRYPT_MODIFIED = 'scrypt-modified';
+    public const SCRYPT_MODIFIED = 'scryptMod';
 
     public const SHA = 'sha';
 
@@ -60,7 +60,7 @@ class Password extends Proof
         }
 
         $this->hashes = $hashes;
-        $this->hash = reset($hashes); // Set the first hash as the default one
+        $this->hash = new Argon2(); // Set the first hash as the default one
     }
 
     /**
@@ -170,5 +170,32 @@ class Password extends Proof
         }
 
         return $password;
+    }
+
+    /**
+     * Create a hash instance by type
+     *
+     * @param  string  $type One of the supported hash types (ARGON2, BCRYPT, SCRYPT, SCRYPT_MODIFIED, SHA, MD5, PHPASS)
+     * @param  array<string, mixed>  $options Optional parameters for hash configuration
+     * @return Hash
+     *
+     * @throws \Exception
+     */
+    public static function createHash(string $type, array $options = []): Hash
+    {
+        $hash = match ($type) {
+            self::ARGON2 => new Argon2(),
+            self::BCRYPT => new Bcrypt(),
+            self::SCRYPT => new Scrypt(),
+            self::SCRYPT_MODIFIED => new ScryptModified(),
+            self::SHA => new Sha(),
+            self::MD5 => new MD5(),
+            self::PHPASS => new PHPass(),
+            default => throw new \Exception("Unsupported hash type: {$type}")
+        };
+
+        $hash->setOptions($options);
+
+        return $hash;
     }
 }

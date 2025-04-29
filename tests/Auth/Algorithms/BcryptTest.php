@@ -25,4 +25,9 @@ class BcryptTest extends TestCase
         $this->assertTrue($this->bcrypt->verify($password, $hash));
         $this->assertFalse($this->bcrypt->verify('wrongpassword', $hash));
     }
+
+    public function testGetName(): void
+    {
+        $this->assertEquals('bcrypt', $this->bcrypt->getName());
+    }
 }

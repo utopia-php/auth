@@ -174,15 +174,15 @@ class PasswordTest extends TestCase
 
         // Test hash creation with options
         $customBcrypt = Password::createHash(Password::BCRYPT, [
-            'cost' => 8
+            'cost' => 8,
         ]);
         $this->assertInstanceOf(Bcrypt::class, $customBcrypt);
-        
+
         $customScrypt = Password::createHash(Password::SCRYPT, [
             'cpu_cost' => 8192,
             'memory_cost' => 4,
             'parallel_cost' => 1,
-            'key_length' => 32
+            'key_length' => 32,
         ]);
         $this->assertInstanceOf(Scrypt::class, $customScrypt);
 
@@ -196,7 +196,7 @@ class PasswordTest extends TestCase
     {
         // Test that invalid options are ignored
         $hash = Password::createHash(Password::BCRYPT, [
-            'invalid_option' => 'value'
+            'invalid_option' => 'value',
         ]);
         $this->assertInstanceOf(Bcrypt::class, $hash);
     }

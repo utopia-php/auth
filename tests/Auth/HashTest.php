@@ -12,15 +12,16 @@ class HashTest extends TestCase
     protected function setUp(): void
     {
         // Create a concrete implementation of Hash for testing
-        $this->hash = new class extends Hash {
+        $this->hash = new class extends Hash
+        {
             public function hash(string $value): string
             {
-                return 'hashed_' . $value;
+                return 'hashed_'.$value;
             }
 
             public function verify(string $value, string $hash): bool
             {
-                return $hash === 'hashed_' . $value;
+                return $hash === 'hashed_'.$value;
             }
 
             public function getName(): string
@@ -43,7 +44,7 @@ class HashTest extends TestCase
         $options = [
             'key1' => 'value1',
             'key2' => 'value2',
-            'key3' => ['nested' => 'value']
+            'key3' => ['nested' => 'value'],
         ];
 
         $this->hash->setOptions($options);
@@ -61,7 +62,7 @@ class HashTest extends TestCase
     {
         $options = [
             'key1' => 'value1',
-            'key2' => 'value2'
+            'key2' => 'value2',
         ];
 
         $this->hash->setOptions($options);
@@ -78,4 +79,4 @@ class HashTest extends TestCase
         $this->assertEquals('value1', $this->hash->getOption('key1'));
         $this->assertEquals('value2', $this->hash->getOption('key2'));
     }
-} 
+}

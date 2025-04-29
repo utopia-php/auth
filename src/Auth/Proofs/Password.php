@@ -175,9 +175,10 @@ class Password extends Proof
     /**
      * Create a hash instance by type
      *
-     * @param string $type One of the supported hash types (ARGON2, BCRYPT, SCRYPT, SCRYPT_MODIFIED, SHA, MD5, PHPASS)
-     * @param array<string, mixed> $options Optional parameters for hash configuration
+     * @param  string  $type One of the supported hash types (ARGON2, BCRYPT, SCRYPT, SCRYPT_MODIFIED, SHA, MD5, PHPASS)
+     * @param  array<string, mixed>  $options Optional parameters for hash configuration
      * @return Hash
+     *
      * @throws \Exception
      */
     public static function createHash(string $type, array $options = []): Hash

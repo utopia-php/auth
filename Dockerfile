@@ -14,7 +14,7 @@ RUN composer update \
     --no-scripts \
     --prefer-dist
 
-FROM php:8.0-cli-alpine as compile
+FROM php:8.4-cli-alpine as compile
 
 RUN apk add --no-cache \
     git \

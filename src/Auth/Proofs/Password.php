@@ -65,12 +65,8 @@ class Password extends Proof
 
     /**
      * Add a new hashing hash
-     *
-     * @param  string  $name
-     * @param  Hash  $hash
-     * @return self
      */
-    public function addHash(string $name, Hash $hash): self
+    public function addHash(string $name, Hash $hash): static
     {
         $this->hashes[$name] = $hash;
 
@@ -80,12 +76,10 @@ class Password extends Proof
     /**
      * Remove a hashing hash
      *
-     * @param  string  $name
-     * @return self
      *
      * @throws \Exception
      */
-    public function removeHash(string $name): self
+    public function removeHash(string $name): static
     {
         if (! isset($this->hashes[$name])) {
             throw new \Exception("Hash '{$name}' not found");
@@ -103,8 +97,6 @@ class Password extends Proof
     /**
      * Get a specific hashing hash by name
      *
-     * @param  string  $name
-     * @return Hash
      *
      * @throws \Exception
      */
@@ -120,12 +112,10 @@ class Password extends Proof
     /**
      * Set password generation length
      *
-     * @param  int  $length
-     * @return self
      *
      * @throws \Exception
      */
-    public function setLength(int $length): self
+    public function setLength(int $length): static
     {
         if ($length < 8) {
             throw new \Exception('Password length must be at least 8 characters');
@@ -138,12 +128,10 @@ class Password extends Proof
     /**
      * Set password generation charset
      *
-     * @param  string  $charset
-     * @return self
      *
      * @throws \Exception
      */
-    public function setCharset(string $charset): self
+    public function setCharset(string $charset): static
     {
         if (strlen($charset) < 10) {
             throw new \Exception('Password charset must contain at least 10 characters');
@@ -175,9 +163,8 @@ class Password extends Proof
     /**
      * Create a hash instance by type
      *
-     * @param  string  $type One of the supported hash types (ARGON2, BCRYPT, SCRYPT, SCRYPT_MODIFIED, SHA, MD5, PHPASS)
-     * @param  array<string, mixed>  $options Optional parameters for hash configuration
-     * @return Hash
+     * @param  string  $type  One of the supported hash types (ARGON2, BCRYPT, SCRYPT, SCRYPT_MODIFIED, SHA, MD5, PHPASS)
+     * @param  array<string, mixed>  $options  Optional parameters for hash configuration
      *
      * @throws \Exception
      */

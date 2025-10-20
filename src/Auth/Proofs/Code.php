@@ -6,14 +6,9 @@ use Utopia\Auth\Proof;
 
 class Code extends Proof
 {
-    /**
-     * @var int
-     */
     protected int $length;
 
     /**
-     * @param  int  $length
-     *
      * @throws \Exception
      */
     public function __construct(int $length = 6)
@@ -29,8 +24,6 @@ class Code extends Proof
 
     /**
      * Get the code length
-     *
-     * @return int
      */
     public function getLength(): int
     {
@@ -40,12 +33,10 @@ class Code extends Proof
     /**
      * Set the code length
      *
-     * @param  int  $length
-     * @return self
      *
      * @throws \Exception
      */
-    public function setLength(int $length): self
+    public function setLength(int $length): static
     {
         if ($length <= 0) {
             throw new \Exception('Code length must be greater than 0');

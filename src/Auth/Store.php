@@ -9,17 +9,10 @@ class Store
      */
     protected array $data = [];
 
-    /**
-     * @var string|null
-     */
     protected ?string $key = null;
 
     /**
      * Get a property from the store
-     *
-     * @param  string  $key
-     * @param  mixed  $default
-     * @return mixed
      */
     public function getProperty(string $key, mixed $default = null): mixed
     {
@@ -28,12 +21,8 @@ class Store
 
     /**
      * Set a property in the store
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return self
      */
-    public function setProperty(string $key, mixed $value): self
+    public function setProperty(string $key, mixed $value): static
     {
         $this->data[$key] = $value;
 
@@ -42,8 +31,6 @@ class Store
 
     /**
      * Get the store key
-     *
-     * @return string|null
      */
     public function getKey(): ?string
     {
@@ -52,11 +39,8 @@ class Store
 
     /**
      * Set the store key
-     *
-     * @param  string|null  $key
-     * @return self
      */
-    public function setKey(?string $key): self
+    public function setKey(?string $key): static
     {
         $this->key = $key;
 
@@ -66,7 +50,6 @@ class Store
     /**
      * Encode store data to base64 string
      *
-     * @return string
      *
      * @throws \JsonException
      */
@@ -79,11 +62,8 @@ class Store
 
     /**
      * Decode base64 string and populate current store instance
-     *
-     * @param  string  $data
-     * @return self
      */
-    public function decode(string $data): self
+    public function decode(string $data): static
     {
         try {
             $decoded = base64_decode($data, true);
@@ -97,7 +77,7 @@ class Store
                     $this->setProperty($key, $value);
                 }
             }
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // Invalid JSON, return empty store
         }
 

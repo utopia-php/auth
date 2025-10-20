@@ -34,12 +34,11 @@ class Bcrypt extends Hash
     /**
      * Set cost parameter
      *
-     * @param  int  $cost Cost parameter between 4 and 31
-     * @return self
+     * @param  int  $cost  Cost parameter between 4 and 31
      *
      * @throws \InvalidArgumentException
      */
-    public function setCost(int $cost): self
+    public function setCost(int $cost): static
     {
         if ($cost < 4 || $cost > 31) {
             throw new \InvalidArgumentException('Cost must be between 4 and 31');

@@ -105,12 +105,11 @@ class ScryptModified extends Hash
     /**
      * Set salt value
      *
-     * @param  string  $salt Base64 encoded salt value
-     * @return self
+     * @param  string  $salt  Base64 encoded salt value
      *
      * @throws \InvalidArgumentException
      */
-    public function setSalt(string $salt): self
+    public function setSalt(string $salt): static
     {
         if (empty($salt)) {
             throw new \InvalidArgumentException('Salt cannot be empty');
@@ -128,12 +127,11 @@ class ScryptModified extends Hash
     /**
      * Set salt separator
      *
-     * @param  string  $separator Base64 encoded salt separator
-     * @return self
+     * @param  string  $separator  Base64 encoded salt separator
      *
      * @throws \InvalidArgumentException
      */
-    public function setSaltSeparator(string $separator): self
+    public function setSaltSeparator(string $separator): static
     {
         if (! preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $separator)) {
             throw new \InvalidArgumentException('Salt separator must be base64 encoded');
@@ -147,12 +145,11 @@ class ScryptModified extends Hash
     /**
      * Set signer key
      *
-     * @param  string  $key Base64 encoded signer key
-     * @return self
+     * @param  string  $key  Base64 encoded signer key
      *
      * @throws \InvalidArgumentException
      */
-    public function setSignerKey(string $key): self
+    public function setSignerKey(string $key): static
     {
         if (empty($key)) {
             throw new \InvalidArgumentException('Signer key cannot be empty');

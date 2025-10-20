@@ -8,7 +8,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 2
 
@@ -16,5 +16,5 @@ jobs:
 
     - name: Run CodeQL
       run: |
-        docker run --rm -v $PWD:/app composer:2.6 sh -c \
+        docker run --rm -v $PWD:/app composer:2 sh -c \
         "composer install --profile --ignore-platform-reqs && composer check"

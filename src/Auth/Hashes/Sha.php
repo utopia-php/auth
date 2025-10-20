@@ -50,12 +50,11 @@ class Sha extends Hash
     /**
      * Set SHA version
      *
-     * @param  string  $version SHA version to use
-     * @return self
+     * @param  string  $version  SHA version to use
      *
      * @throws \InvalidArgumentException
      */
-    public function setVersion(string $version): self
+    public function setVersion(string $version): static
     {
         if (! in_array($version, self::VALID_VERSIONS, true)) {
             throw new \InvalidArgumentException('Invalid SHA version. Valid versions are: '.implode(', ', self::VALID_VERSIONS));

@@ -22,8 +22,6 @@ class Phrase extends Proof
 
     /**
      * Generate a proof
-     *
-     * @return string
      */
     public function generate(): string
     {

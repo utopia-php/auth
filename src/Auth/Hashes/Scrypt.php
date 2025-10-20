@@ -49,8 +49,8 @@ class Scrypt extends Hash
     /**
      * Set CPU cost parameter
      *
-     * @param  int  $cost CPU cost parameter N. Must be larger than 1 and a power of 2
-     * @return self
+     * @param  int  $cost  CPU cost parameter N. Must be larger than 1 and a power of 2
+     * @return static
      *
      * @throws \InvalidArgumentException
      */
@@ -68,12 +68,11 @@ class Scrypt extends Hash
     /**
      * Set memory cost parameter
      *
-     * @param  int  $cost Memory cost parameter r
-     * @return self
+     * @param  int  $cost  Memory cost parameter r
      *
      * @throws \InvalidArgumentException
      */
-    public function setMemoryCost(int $cost): self
+    public function setMemoryCost(int $cost): static
     {
         if ($cost < 1) {
             throw new \InvalidArgumentException('Memory cost must be >= 1');
@@ -87,12 +86,11 @@ class Scrypt extends Hash
     /**
      * Set parallelization parameter
      *
-     * @param  int  $cost Parallelization parameter p
-     * @return self
+     * @param  int  $cost  Parallelization parameter p
      *
      * @throws \InvalidArgumentException
      */
-    public function setParallelCost(int $cost): self
+    public function setParallelCost(int $cost): static
     {
         if ($cost < 1) {
             throw new \InvalidArgumentException('Parallel cost must be >= 1');
@@ -106,12 +104,11 @@ class Scrypt extends Hash
     /**
      * Set output length
      *
-     * @param  int  $length Desired output length in bytes
-     * @return self
+     * @param  int  $length  Desired output length in bytes
      *
      * @throws \InvalidArgumentException
      */
-    public function setLength(int $length): self
+    public function setLength(int $length): static
     {
         if ($length < 16) {
             throw new \InvalidArgumentException('Length must be >= 16 bytes');
@@ -125,12 +122,11 @@ class Scrypt extends Hash
     /**
      * Set salt value
      *
-     * @param  string  $salt Salt value for the hash
-     * @return self
+     * @param  string  $salt  Salt value for the hash
      *
      * @throws \InvalidArgumentException
      */
-    public function setSalt(string $salt): self
+    public function setSalt(string $salt): static
     {
         if (empty($salt)) {
             throw new \InvalidArgumentException('Salt cannot be empty');

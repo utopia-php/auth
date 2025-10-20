@@ -6,9 +6,6 @@ use Utopia\Auth\Hashes\Argon2;
 
 abstract class Proof
 {
-    /**
-     * @var Hash
-     */
     protected Hash $hash;
 
     public function __construct()
@@ -18,11 +15,8 @@ abstract class Proof
 
     /**
      * Set custom hash
-     *
-     * @param  Hash  $hash
-     * @return self
      */
-    public function setHash(Hash $hash): self
+    public function setHash(Hash $hash): static
     {
         $this->hash = $hash;
 
@@ -31,8 +25,6 @@ abstract class Proof
 
     /**
      * Get current hash
-     *
-     * @return Hash
      */
     public function getHash(): Hash
     {
@@ -41,16 +33,11 @@ abstract class Proof
 
     /**
      * Generate a proof
-     *
-     * @return string
      */
     abstract public function generate(): string;
 
     /**
      * Hash a proof
-     *
-     * @param  string  $proof
-     * @return string
      */
     public function hash(string $proof): string
     {
@@ -59,10 +46,6 @@ abstract class Proof
 
     /**
      * Verify a proof
-     *
-     * @param  string  $proof
-     * @param  string  $hash
-     * @return bool
      */
     public function verify(string $proof, string $hash): bool
     {

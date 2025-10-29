@@ -1,4 +1,4 @@
-FROM composer:2.0 as composer
+FROM composer:2.8 AS composer
 
 ARG TESTING=false
 ENV TESTING=$TESTING
@@ -14,7 +14,7 @@ RUN composer update \
     --no-scripts \
     --prefer-dist
 
-FROM php:8.4-cli-alpine as compile
+FROM php:8.4-cli-alpine AS compile
 
 RUN apk add --no-cache \
     git \
@@ -27,7 +27,7 @@ RUN apk add --no-cache \
 FROM compile AS scrypt
 RUN pecl install scrypt
 
-FROM compile as final
+FROM compile AS final
 
 LABEL maintainer="team@appwrite.io"
 

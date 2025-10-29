@@ -38,7 +38,7 @@ WORKDIR /usr/src/code
 RUN docker-php-ext-install sodium
 
 # Copy and enable scrypt extension
-COPY --from=scrypt /usr/local/lib/php/extensions/no-debug-non-zts-20240926/scrypt.so /usr/local/lib/php/extensions/no-debug-non-zts-20240926/scrypt.so
+COPY --from=scrypt /usr/local/lib/php/extensions/no-debug-non-zts-20240924/scrypt.so /usr/local/lib/php/extensions/no-debug-non-zts-20240924/scrypt.so
 
 RUN docker-php-ext-enable scrypt
 

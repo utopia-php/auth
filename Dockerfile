@@ -1,4 +1,4 @@
-FROM composer:2.0 as composer
+FROM composer:2.8 AS composer
 
 ARG TESTING=false
 ENV TESTING=$TESTING
@@ -14,7 +14,7 @@ RUN composer update \
     --no-scripts \
     --prefer-dist
 
-FROM php:8.0-cli-alpine as compile
+FROM php:8.4-cli-alpine AS compile
 
 RUN apk add --no-cache \
     git \
@@ -27,7 +27,7 @@ RUN apk add --no-cache \
 FROM compile AS scrypt
 RUN pecl install scrypt
 
-FROM compile as final
+FROM compile AS final
 
 LABEL maintainer="team@appwrite.io"
 
@@ -38,7 +38,8 @@ WORKDIR /usr/src/code
 RUN docker-php-ext-install sodium
 
 # Copy and enable scrypt extension
-COPY --from=scrypt /usr/local/lib/php/extensions/no-debug-non-zts-20200930/scrypt.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
+COPY --from=scrypt /usr/local/lib/php/extensions/no-debug-non-zts-20240924/scrypt.so /usr/local/lib/php/extensions/no-debug-non-zts-20240924/scrypt.so
+
 RUN docker-php-ext-enable scrypt
 
 # Configure PHP

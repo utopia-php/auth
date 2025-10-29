@@ -12,11 +12,10 @@ abstract class Hash
     /**
      * Set hashing options
      *
-     * @param  string  $key The option key to set
-     * @param  mixed  $value The value to set for the option
-     * @return self
+     * @param  string  $key  The option key to set
+     * @param  mixed  $value  The value to set for the option
      */
-    public function setOption(string $key, mixed $value): self
+    public function setOption(string $key, mixed $value): static
     {
         $this->options[$key] = $value;
 
@@ -26,10 +25,9 @@ abstract class Hash
     /**
      * Set multiple hashing options at once
      *
-     * @param  array<string, mixed>  $options Array of options to set
-     * @return self
+     * @param  array<string, mixed>  $options  Array of options to set
      */
-    public function setOptions(array $options): self
+    public function setOptions(array $options): static
     {
         foreach ($options as $key => $value) {
             $this->setOption($key, $value);
@@ -41,8 +39,8 @@ abstract class Hash
     /**
      * Get a specific option value
      *
-     * @param  string  $key The option key to retrieve
-     * @param  mixed  $default Default value if option doesn't exist
+     * @param  string  $key  The option key to retrieve
+     * @param  mixed  $default  Default value if option doesn't exist
      * @return mixed The option value or default if not found
      */
     public function getOption(string $key, mixed $default = null): mixed
@@ -62,25 +60,16 @@ abstract class Hash
 
     /**
      * Hash a value
-     *
-     * @param  string  $value
-     * @return string
      */
     abstract public function hash(string $value): string;
 
     /**
      * Verify a value against a hash
-     *
-     * @param  string  $value
-     * @param  string  $hash
-     * @return bool
      */
     abstract public function verify(string $value, string $hash): bool;
 
     /**
      * Get the name of the hash algorithm
-     *
-     * @return string
      */
     abstract public function getName(): string;
 }

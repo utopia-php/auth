@@ -1,6 +1,6 @@
 <?php
 
-namespace Utopia\Tests\Auth\Hashes;
+namespace Utopia\Tests\Auth\Algorithms;
 
 use PHPUnit\Framework\TestCase;
 use Utopia\Auth\Hashes\Sha;

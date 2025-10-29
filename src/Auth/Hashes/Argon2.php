@@ -12,8 +12,8 @@ class Argon2 extends Hash
     public function __construct()
     {
         $this->setOption('type', $this->getName());
-        $this->setOption('memoryCost', 65536);
-        $this->setOption('timeCost', 4);
+        $this->setOption('memory_cost', 65536);
+        $this->setOption('time_cost', 4);
         $this->setOption('threads', 3);
     }
 
@@ -36,14 +36,13 @@ class Argon2 extends Hash
     /**
      * Set memory cost
      *
-     * @param  int  $cost Memory cost in KiB
-     * @return self
+     * @param  int  $cost  Memory cost in KiB
      *
      * @throws \InvalidArgumentException
      */
-    public function setMemoryCost(int $cost): self
+    public function setMemoryCost(int $cost): static
     {
-        $this->setOption('memoryCost', $cost);
+        $this->setOption('memory_cost', $cost);
 
         return $this;
     }
@@ -51,14 +50,13 @@ class Argon2 extends Hash
     /**
      * Set time cost
      *
-     * @param  int  $cost Number of iterations
-     * @return self
+     * @param  int  $cost  Number of iterations
      *
      * @throws \InvalidArgumentException
      */
-    public function setTimeCost(int $cost): self
+    public function setTimeCost(int $cost): static
     {
-        $this->setOption('timeCost', $cost);
+        $this->setOption('time_cost', $cost);
 
         return $this;
     }
@@ -66,12 +64,11 @@ class Argon2 extends Hash
     /**
      * Set number of threads
      *
-     * @param  int  $threads Number of threads to use
-     * @return self
+     * @param  int  $threads  Number of threads to use
      *
      * @throws \InvalidArgumentException
      */
-    public function setThreads(int $threads): self
+    public function setThreads(int $threads): static
     {
         $this->setOption('threads', $threads);
 

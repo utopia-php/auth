@@ -6,14 +6,9 @@ use Utopia\Auth\Proof;
 
 class Token extends Proof
 {
-    /**
-     * @var int
-     */
     protected int $length;
 
     /**
-     * @param  int  $length
-     *
      * @throws \Exception
      */
     public function __construct(int $length = 256)
@@ -40,8 +35,6 @@ class Token extends Proof
 
     /**
      * Get the token length
-     *
-     * @return int
      */
     public function getLength(): int
     {
@@ -51,12 +44,10 @@ class Token extends Proof
     /**
      * Set the token length
      *
-     * @param  int  $length
-     * @return self
      *
      * @throws \Exception
      */
-    public function setLength(int $length): self
+    public function setLength(int $length): static
     {
         if ($length <= 0) {
             throw new \Exception('Token length must be greater than 0');

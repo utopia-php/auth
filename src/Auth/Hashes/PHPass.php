@@ -73,7 +73,7 @@ class PHPass extends Hash
      */
     protected function getRandomBytes(int $count): string
     {
-        if (! is_int($count) || $count < 1) {
+        if ($count < 1) {
             throw new \Exception('Argument count must be a positive integer');
         }
 
@@ -106,7 +106,7 @@ class PHPass extends Hash
      */
     protected function encode64(string $input, int $count): string
     {
-        if (! is_int($count) || $count < 1) {
+        if ($count < 1) {
             throw new \Exception('Argument count must be a positive integer');
         }
 
@@ -226,8 +226,8 @@ class PHPass extends Hash
     /**
      * Set iteration count (log2)
      *
-     * @param  int  $count Iteration count (log2) between 4 and 31
-     * @return self
+     * @param  int  $count  Iteration count (log2) between 4 and 31
+     * @return static
      *
      * @throws \InvalidArgumentException
      */
@@ -245,8 +245,8 @@ class PHPass extends Hash
     /**
      * Set portable hashes mode
      *
-     * @param  bool  $portable Whether to use portable hashes
-     * @return self
+     * @param  bool  $portable  Whether to use portable hashes
+     * @return static
      */
     public function setPortableHashes(bool $portable): PHPass
     {

@@ -77,30 +77,18 @@ abstract class Asymmetric extends Issuer
         }
 
         return [
-            self::generatePrivateKey($resource),
-            self::generatePublicKey($resource),
+            self::exportPrivateKey($resource),
+            self::exportPublicKey($resource),
         ];
     }
 
     /**
-     * Export the PEM-encoded private key from an OpenSSL key resource, or
-     * generate a fresh keypair and return its private key when none is given.
-     *
-     * @param  \OpenSSLAsymmetricKey|null  $resource  An existing key resource, or null to create one.
+     * Export the PEM-encoded private key from an OpenSSL key resource.
      *
      * @throws \Exception When the key cannot be exported.
      */
-    private static function generatePrivateKey(?\OpenSSLAsymmetricKey $resource = null, int $bits = 2048): string
+    private static function exportPrivateKey(\OpenSSLAsymmetricKey $resource): string
     {
-        $resource ??= \openssl_pkey_new([
-            'private_key_bits' => $bits,
-            'private_key_type' => OPENSSL_KEYTYPE_RSA,
-        ]);
-
-        if ($resource === false) {
-            throw new \Exception('Unable to generate an RSA key pair');
-        }
-
         $privateKey = '';
         if (!\openssl_pkey_export($resource, $privateKey)) {
             throw new \Exception('Unable to export the private key');
@@ -110,24 +98,12 @@ abstract class Asymmetric extends Issuer
     }
 
     /**
-     * Export the PEM-encoded public key, either from an existing OpenSSL key
-     * resource or from a PEM-encoded private key string.
-     *
-     * @param  \OpenSSLAsymmetricKey|string  $key  A key resource or a PEM-encoded private key.
+     * Export the PEM-encoded public key from an OpenSSL key resource.
      *
      * @throws \Exception When the public key cannot be derived.
      */
-    private static function generatePublicKey(\OpenSSLAsymmetricKey|string $key): string
+    private static function exportPublicKey(\OpenSSLAsymmetricKey $resource): string
     {
-        if (\is_string($key)) {
-            $resource = \openssl_pkey_get_private($key);
-            if ($resource === false) {
-                throw new \Exception('Unable to parse the private key');
-            }
-        } else {
-            $resource = $key;
-        }
-
         $details = \openssl_pkey_get_details($resource);
         if ($details === false || !isset($details['key'])) {
             throw new \Exception('Unable to export the public key');

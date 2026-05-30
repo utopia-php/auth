@@ -29,6 +29,7 @@
     "require": {
         "php": ">=8.0",
         "ext-hash": "*",
+        "ext-openssl": "*",
         "ext-scrypt": "*",
         "ext-sodium": "*"
     },

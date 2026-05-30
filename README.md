@@ -31,6 +31,10 @@ Utopia Framework requires PHP 8.0 or later. We recommend using the latest PHP ve
 - **PHPass** - Portable password hashing framework
 - **MD5** (Not recommended for passwords, legacy support only)
 
+### Token Issuers
+
+A generic framework for minting signed [JWS](https://datatracker.ietf.org/doc/html/rfc7515) tokens. The base `Issuer` is **not** tied to any particular protocol — it owns the JWS mechanics (header assembly, `jti` generation, base64url encoding and the header/payload/signature structure) and delegates only the signing algorithm and claim set to a subclass.
+
 ## Usage
 
 ### Data Store
@@ -164,6 +168,93 @@ $argon2
     ->setTimeCost(4)        // Number of iterations
     ->setThreads(3);        // Number of threads
 ```
+
+### Issuing Tokens
+
+#### OAuth2 Access Tokens (RFC 9068)
+
+```php
+<?php
+
+use Utopia\Auth\Issuers\Asymmetric\AccessToken;
+
+// Generate an RSA key pair (do this once and persist the keys)
+[$privateKey, $publicKey] = AccessToken::generateKeyPair();
+
+$accessToken = new AccessToken(
+    $privateKey,
+    $publicKey,
+    'https://example.com/v1/oauth2/my-app' // The "iss" claim (authorization server)
+);
+
+// Issue a signed RS256 access token
+$jwt = $accessToken->issue(
+    subject: 'user-123',                  // "sub" — the resource owner
+    audience: 'https://api.example.com',  // "aud" — the resource server
+    clientId: 'client-abc',               // "client_id" — the client it was issued to
+    authTime: time(),                     // "auth_time" — when the user authenticated
+    duration: 3600,                       // Lifetime in seconds ("exp")
+    scopes: ['openid', 'profile', 'email']
+);
+
+// Publish the public key as a JWK so resource servers can verify tokens
+$jwk = $accessToken->getPublicJwk();
+$keyId = $accessToken->getKeyId();
+```
+
+#### OAuth2 Refresh Tokens (HS256)
+
+```php
+<?php
+
+use Utopia\Auth\Issuers\Symmetric\RefreshToken;
+
+// Generate a signing secret (do this once and keep it server-side)
+$secret = RefreshToken::generateSecret();
+
+$refreshToken = new RefreshToken(
+    $secret,
+    'https://example.com/v1/oauth2/my-app'
+);
+
+// Issue a signed HS256 refresh token
+$jwt = $refreshToken->issue(
+    subject: 'user-123',                            // "sub"
+    audience: 'https://example.com/v1/oauth2/token', // "aud" — the token endpoint
+    clientId: 'client-abc',                         // "client_id"
+    duration: 1209600,                              // Lifetime in seconds (e.g. 14 days)
+    scopes: ['openid', 'profile']
+);
+```
+
+#### ID Tokens (OpenID Connect)
+
+```php
+<?php
+
+use Utopia\Auth\Issuers\Asymmetric\IdToken;
+
+[$privateKey, $publicKey] = IdToken::generateKeyPair();
+
+$idToken = new IdToken(
+    $privateKey,
+    $publicKey,
+    'https://example.com/v1/oauth2/my-app'
+);
+
+// Issue a signed OIDC id_token
+$jwt = $idToken->issue(
+    subject: 'user-123',          // "sub" — the authenticated user
+    audience: 'client-abc',       // "aud" — the client the token is for
+    authTime: time(),             // "auth_time"
+    duration: 3600,               // Lifetime in seconds ("exp")
+    nonce: 'n-0S6_WzA2Mj',        // Optional "nonce" from the auth request
+    accessToken: $jwt,            // Optional co-issued access_token (adds "at_hash")
+    code: null                    // Optional co-issued authorization code (adds "c_hash")
+);
+```
+
+> Both asymmetric and symmetric issuers accept an optional `keyId` constructor argument (the JWS `kid` header) for key rotation. For asymmetric issuers it is derived deterministically from the public key when omitted.
 
 ## Tests
 

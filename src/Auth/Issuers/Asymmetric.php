@@ -121,13 +121,7 @@ abstract class Asymmetric extends Issuer
      */
     public function getKeyId(): string
     {
-        if ($this->keyId !== null) {
-            return $this->keyId;
-        }
-
-        $this->keyId = \hash('sha256', $this->getModulus());
-
-        return $this->keyId;
+        return $this->keyId ??= self::deriveKeyId($this->getModulus());
     }
 
     /**
@@ -154,7 +148,9 @@ abstract class Asymmetric extends Issuer
             'kty' => 'RSA',
             'use' => 'sig',
             'alg' => 'RS256',
-            'kid' => $this->getKeyId(),
+            // Reuse the modulus already in $details rather than re-parsing
+            // the key via getKeyId() -> getModulus().
+            'kid' => $this->keyId ??= self::deriveKeyId($details['rsa']['n']),
             'n' => $this->base64UrlEncode($details['rsa']['n']),
             'e' => $this->base64UrlEncode($details['rsa']['e']),
         ];
@@ -191,6 +187,15 @@ abstract class Asymmetric extends Issuer
         }
 
         return $signature;
+    }
+
+    /**
+     * Derive a deterministic key id from the RSA modulus, so the same key
+     * always yields the same "kid".
+     */
+    private static function deriveKeyId(string $modulus): string
+    {
+        return \hash('sha256', $modulus);
     }
 
     /**

@@ -54,6 +54,12 @@ class IdToken extends Asymmetric
     ): string {
         $now = \time();
 
+        // nonce/at_hash/c_hash are issuer-controlled; drop any caller-supplied
+        // values so they cannot be injected through $claims when the matching
+        // parameter is absent (e.g. a forged at_hash binding the id_token to an
+        // access token that was never co-issued).
+        unset($claims['nonce'], $claims['at_hash'], $claims['c_hash']);
+
         $claims = \array_merge($claims, [
             'iss' => $this->issuer,
             'sub' => $subject,

@@ -63,7 +63,9 @@ class RefreshTokenTest extends TestCase
         $this->assertGreaterThanOrEqual($before, $claims['iat']);
         $this->assertLessThanOrEqual($after, $claims['iat']);
         $this->assertEquals($claims['iat'] + 1209600, $claims['exp']);
-        $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', (string) $claims['jti']);
+        $jti = $claims['jti'];
+        \assert(\is_string($jti));
+        $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $jti);
 
         // Refresh tokens carry no auth_time.
         $this->assertArrayNotHasKey('auth_time', $claims);
@@ -95,6 +97,26 @@ class RefreshTokenTest extends TestCase
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
 
         $this->assertArrayNotHasKey('scope', $claims);
+    }
+
+    public function testScopeCannotBeInjectedViaClaimsWhenEmpty(): void
+    {
+        $token = $this->refreshToken->issue('user-123', 'aud', 'client-abc', 1209600, [], null, [
+            'scope' => 'admin',
+        ]);
+        $claims = $this->decodeSegment(\explode('.', $token)[1]);
+
+        $this->assertArrayNotHasKey('scope', $claims);
+    }
+
+    public function testScopeCannotBeOverriddenViaClaims(): void
+    {
+        $token = $this->refreshToken->issue('user-123', 'aud', 'client-abc', 1209600, ['read'], null, [
+            'scope' => 'admin',
+        ]);
+        $claims = $this->decodeSegment(\explode('.', $token)[1]);
+
+        $this->assertEquals('read', $claims['scope']);
     }
 
     public function testJtiIsGeneratedAndUnique(): void

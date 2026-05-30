@@ -51,6 +51,10 @@ class RefreshToken extends Symmetric
     ): string {
         $now = \time();
 
+        // "scope" is issuer-controlled; drop any caller-supplied value so it
+        // cannot be injected through $claims when $scopes is empty.
+        unset($claims['scope']);
+
         $claims = \array_merge($claims, [
             'iss' => $this->issuer,
             'aud' => $audience,

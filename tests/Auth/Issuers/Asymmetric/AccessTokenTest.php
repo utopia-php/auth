@@ -63,7 +63,9 @@ class AccessTokenTest extends TestCase
         $this->assertGreaterThanOrEqual($before, $claims['iat']);
         $this->assertLessThanOrEqual($after, $claims['iat']);
         $this->assertEquals($claims['iat'] + 3600, $claims['exp']);
-        $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', (string) $claims['jti']);
+        $jti = $claims['jti'];
+        \assert(\is_string($jti));
+        $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $jti);
     }
 
     public function testSignatureIsValid(): void
@@ -87,6 +89,26 @@ class AccessTokenTest extends TestCase
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
 
         $this->assertArrayNotHasKey('scope', $claims);
+    }
+
+    public function testScopeCannotBeInjectedViaClaimsWhenEmpty(): void
+    {
+        $token = $this->accessToken->issue('user-123', 'https://api.example.com', 'client-abc', 1000, 3600, [], null, [
+            'scope' => 'admin',
+        ]);
+        $claims = $this->decodeSegment(\explode('.', $token)[1]);
+
+        $this->assertArrayNotHasKey('scope', $claims);
+    }
+
+    public function testScopeCannotBeOverriddenViaClaims(): void
+    {
+        $token = $this->accessToken->issue('user-123', 'https://api.example.com', 'client-abc', 1000, 3600, ['read'], null, [
+            'scope' => 'admin',
+        ]);
+        $claims = $this->decodeSegment(\explode('.', $token)[1]);
+
+        $this->assertEquals('read', $claims['scope']);
     }
 
     public function testJtiIsGeneratedAndUnique(): void

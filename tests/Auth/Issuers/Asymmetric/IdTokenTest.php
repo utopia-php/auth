@@ -115,6 +115,49 @@ class IdTokenTest extends TestCase
         $this->assertEquals($expectedCHash, $claims['c_hash']);
     }
 
+    public function testHashClaimsCannotBeInjectedViaClaimsWhenAbsent(): void
+    {
+        // No nonce/accessToken/code passed, but a caller tries to smuggle them
+        // (e.g. a forged at_hash) through the additional claims array.
+        $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600, null, null, null, [
+            'nonce' => 'forged-nonce',
+            'at_hash' => 'forged-at-hash',
+            'c_hash' => 'forged-c-hash',
+        ]);
+        $claims = $this->decodeSegment(\explode('.', $token)[1]);
+
+        $this->assertArrayNotHasKey('nonce', $claims);
+        $this->assertArrayNotHasKey('at_hash', $claims);
+        $this->assertArrayNotHasKey('c_hash', $claims);
+    }
+
+    public function testHashClaimsCannotBeOverriddenViaClaims(): void
+    {
+        $accessToken = 'access-token-value';
+        $code = 'authorization-code-value';
+
+        $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600, 'real-nonce', $accessToken, $code, [
+            'nonce' => 'forged-nonce',
+            'at_hash' => 'forged-at-hash',
+            'c_hash' => 'forged-c-hash',
+        ]);
+        $claims = $this->decodeSegment(\explode('.', $token)[1]);
+
+        $this->assertEquals('real-nonce', $claims['nonce']);
+        $this->assertEquals($this->expectedLeftHalfHash($accessToken), $claims['at_hash']);
+        $this->assertEquals($this->expectedLeftHalfHash($code), $claims['c_hash']);
+    }
+
+    public function testUnrepresentableClaimThrows(): void
+    {
+        // Invalid UTF-8 cannot be JSON-encoded; this must fail loudly rather
+        // than silently produce a token with an empty payload segment.
+        $this->expectException(\JsonException::class);
+        $this->idToken->issue('user-123', 'client-abc', 1000, 3600, null, null, null, [
+            'bad' => "\xB1\x31",
+        ]);
+    }
+
     public function testAdditionalClaims(): void
     {
         $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600, null, null, null, [

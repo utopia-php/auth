@@ -68,6 +68,7 @@ abstract class Issuer
      *
      * @param  array<string, mixed>  $claims
      *
+     * @throws \JsonException When the header or claims cannot be JSON-encoded.
      * @throws \Exception When signing fails.
      */
     protected function sign(array $claims): string
@@ -77,9 +78,9 @@ abstract class Issuer
             'alg' => $this->getAlgorithm(),
         ], $this->getHeaders());
 
-        $signingInput = $this->base64UrlEncode((string) \json_encode($header))
+        $signingInput = $this->base64UrlEncode(\json_encode($header, JSON_THROW_ON_ERROR))
             . '.'
-            . $this->base64UrlEncode((string) \json_encode($claims));
+            . $this->base64UrlEncode(\json_encode($claims, JSON_THROW_ON_ERROR));
 
         return $signingInput . '.' . $this->base64UrlEncode($this->signInput($signingInput));
     }

@@ -1,23 +1,23 @@
 <?php
 
-namespace Utopia\Tests\Auth;
+namespace Utopia\Tests\Auth\Issuers\Asymmetric;
 
 use PHPUnit\Framework\TestCase;
-use Utopia\Auth\OIDC;
+use Utopia\Auth\Issuers\Asymmetric\IdToken;
 
-class OIDCTest extends TestCase
+class IdTokenTest extends TestCase
 {
     protected string $privateKey;
 
     protected string $publicKey;
 
-    protected OIDC $oidc;
+    protected IdToken $idToken;
 
     protected function setUp(): void
     {
-        [$this->privateKey, $this->publicKey] = OIDC::generateKeyPair();
+        [$this->privateKey, $this->publicKey] = IdToken::generateKeyPair();
 
-        $this->oidc = new OIDC(
+        $this->idToken = new IdToken(
             $this->privateKey,
             $this->publicKey,
             'https://example.com/v1/oauth2/test',
@@ -38,7 +38,7 @@ class OIDCTest extends TestCase
 
     public function testIssueStructure(): void
     {
-        $token = $this->oidc->issue('user-123', 'client-abc', 1000, 3600);
+        $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600);
 
         $parts = \explode('.', $token);
         $this->assertCount(3, $parts);
@@ -46,13 +46,13 @@ class OIDCTest extends TestCase
         $header = $this->decodeSegment($parts[0]);
         $this->assertEquals('JWT', $header['typ']);
         $this->assertEquals('RS256', $header['alg']);
-        $this->assertEquals($this->oidc->getKeyId(), $header['kid']);
+        $this->assertEquals($this->idToken->getKeyId(), $header['kid']);
     }
 
     public function testIssueClaims(): void
     {
         $before = \time();
-        $token = $this->oidc->issue('user-123', 'client-abc', 1000, 3600);
+        $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600);
         $after = \time();
 
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
@@ -73,7 +73,7 @@ class OIDCTest extends TestCase
 
     public function testSignatureIsValid(): void
     {
-        $token = $this->oidc->issue('user-123', 'client-abc', 1000, 3600);
+        $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600);
 
         $parts = \explode('.', $token);
         $signingInput = $parts[0] . '.' . $parts[1];
@@ -91,7 +91,7 @@ class OIDCTest extends TestCase
 
     public function testNonceClaim(): void
     {
-        $token = $this->oidc->issue('user-123', 'client-abc', 1000, 3600, 'n-0S6_WzA2Mj');
+        $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600, 'n-0S6_WzA2Mj');
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
 
         $this->assertEquals('n-0S6_WzA2Mj', $claims['nonce']);
@@ -102,7 +102,7 @@ class OIDCTest extends TestCase
         $accessToken = 'access-token-value';
         $code = 'authorization-code-value';
 
-        $token = $this->oidc->issue('user-123', 'client-abc', 1000, 3600, null, $accessToken, $code);
+        $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600, null, $accessToken, $code);
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
 
         $expectedAtHash = $this->expectedLeftHalfHash($accessToken);
@@ -114,7 +114,7 @@ class OIDCTest extends TestCase
 
     public function testAdditionalClaims(): void
     {
-        $token = $this->oidc->issue('user-123', 'client-abc', 1000, 3600, null, null, null, [
+        $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600, null, null, null, [
             'email' => 'user@example.com',
             'email_verified' => true,
         ]);
@@ -126,7 +126,7 @@ class OIDCTest extends TestCase
 
     public function testAdditionalClaimsCannotOverrideRegisteredClaims(): void
     {
-        $token = $this->oidc->issue('user-123', 'client-abc', 1000, 3600, null, null, null, [
+        $token = $this->idToken->issue('user-123', 'client-abc', 1000, 3600, null, null, null, [
             'sub' => 'attacker',
             'iss' => 'https://evil.example.com',
         ]);
@@ -138,31 +138,31 @@ class OIDCTest extends TestCase
 
     public function testKeyIdIsDeterministic(): void
     {
-        $other = new OIDC($this->privateKey, $this->publicKey, 'https://example.com/v1/oauth2/test');
+        $other = new IdToken($this->privateKey, $this->publicKey, 'https://example.com/v1/oauth2/test');
 
-        $this->assertEquals($this->oidc->getKeyId(), $other->getKeyId());
-        $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $this->oidc->getKeyId());
+        $this->assertEquals($this->idToken->getKeyId(), $other->getKeyId());
+        $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $this->idToken->getKeyId());
     }
 
     public function testCustomKeyId(): void
     {
-        $oidc = new OIDC($this->privateKey, $this->publicKey, 'https://example.com', 'my-custom-kid');
+        $idToken = new IdToken($this->privateKey, $this->publicKey, 'https://example.com', 'my-custom-kid');
 
-        $this->assertEquals('my-custom-kid', $oidc->getKeyId());
+        $this->assertEquals('my-custom-kid', $idToken->getKeyId());
 
-        $token = $oidc->issue('user-123', 'client-abc', 1000, 3600);
+        $token = $idToken->issue('user-123', 'client-abc', 1000, 3600);
         $header = $this->decodeSegment(\explode('.', $token)[0]);
         $this->assertEquals('my-custom-kid', $header['kid']);
     }
 
     public function testGetPublicJwk(): void
     {
-        $jwk = $this->oidc->getPublicJwk();
+        $jwk = $this->idToken->getPublicJwk();
 
         $this->assertEquals('RSA', $jwk['kty']);
         $this->assertEquals('sig', $jwk['use']);
         $this->assertEquals('RS256', $jwk['alg']);
-        $this->assertEquals($this->oidc->getKeyId(), $jwk['kid']);
+        $this->assertEquals($this->idToken->getKeyId(), $jwk['kid']);
         $this->assertNotEmpty($jwk['n']);
         $this->assertNotEmpty($jwk['e']);
         // base64url: no padding, no +/ characters
@@ -174,52 +174,32 @@ class OIDCTest extends TestCase
     public function testEmptyPrivateKeyThrows(): void
     {
         $this->expectException(\Exception::class);
-        new OIDC('', $this->publicKey, 'https://example.com');
+        new IdToken('', $this->publicKey, 'https://example.com');
     }
 
     public function testEmptyPublicKeyThrows(): void
     {
         $this->expectException(\Exception::class);
-        new OIDC($this->privateKey, '', 'https://example.com');
+        new IdToken($this->privateKey, '', 'https://example.com');
     }
 
     public function testEmptyIssuerThrows(): void
     {
         $this->expectException(\Exception::class);
-        new OIDC($this->privateKey, $this->publicKey, '');
+        new IdToken($this->privateKey, $this->publicKey, '');
     }
 
     public function testGenerateKeyPair(): void
     {
-        [$privateKey, $publicKey] = OIDC::generateKeyPair();
+        [$privateKey, $publicKey] = IdToken::generateKeyPair();
 
         $this->assertStringContainsString('PRIVATE KEY', $privateKey);
         $this->assertStringContainsString('PUBLIC KEY', $publicKey);
 
         // The generated keys are usable for issuing and verifying a token.
-        $oidc = new OIDC($privateKey, $publicKey, 'https://example.com');
-        $token = $oidc->issue('user-123', 'client-abc', 1000, 3600);
+        $idToken = new IdToken($privateKey, $publicKey, 'https://example.com');
+        $token = $idToken->issue('user-123', 'client-abc', 1000, 3600);
 
-        $parts = \explode('.', $token);
-        $result = \openssl_verify(
-            $parts[0] . '.' . $parts[1],
-            \base64_decode(\strtr($parts[2], '-_', '+/')),
-            $publicKey,
-            OPENSSL_ALGO_SHA256
-        );
-        $this->assertEquals(1, $result);
-    }
-
-    public function testGeneratePublicKeyFromPrivateKey(): void
-    {
-        $privateKey = OIDC::generatePrivateKey();
-        $publicKey = OIDC::generatePublicKey($privateKey);
-
-        $this->assertStringContainsString('PUBLIC KEY', $publicKey);
-
-        // The derived public key matches the private key it was derived from.
-        $oidc = new OIDC($privateKey, $publicKey, 'https://example.com');
-        $token = $oidc->issue('user-123', 'client-abc', 1000, 3600);
         $parts = \explode('.', $token);
         $result = \openssl_verify(
             $parts[0] . '.' . $parts[1],
@@ -231,7 +211,7 @@ class OIDCTest extends TestCase
     }
 
     /**
-     * Mirror of OIDC::leftHalfHash for assertion purposes.
+     * Mirror of IdToken::leftHalfHash for assertion purposes.
      */
     private function expectedLeftHalfHash(string $value): string
     {

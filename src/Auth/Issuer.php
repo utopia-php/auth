@@ -88,6 +88,8 @@ abstract class Issuer
      * Generate a unique token identifier suitable for the "jti" claim
      * (RFC 7519 §4.1.7) as a random hex string.
      *
+     * @param  int<1, max>  $bytes
+     *
      * @throws \Exception When sufficient randomness is unavailable.
      */
     protected function generateJti(int $bytes = 16): string

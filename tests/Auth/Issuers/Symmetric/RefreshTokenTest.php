@@ -26,7 +26,10 @@ class RefreshTokenTest extends TestCase
      */
     private function decodeSegment(string $segment): array
     {
-        return \json_decode(\base64_decode(\strtr($segment, '-_', '+/')), true);
+        /** @var array<string, mixed> $claims */
+        $claims = \json_decode(\base64_decode(\strtr($segment, '-_', '+/')), true);
+
+        return $claims;
     }
 
     private function base64UrlEncode(string $value): string
@@ -60,7 +63,7 @@ class RefreshTokenTest extends TestCase
         $this->assertGreaterThanOrEqual($before, $claims['iat']);
         $this->assertLessThanOrEqual($after, $claims['iat']);
         $this->assertEquals($claims['iat'] + 1209600, $claims['exp']);
-        $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $claims['jti']);
+        $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', (string) $claims['jti']);
 
         // Refresh tokens carry no auth_time.
         $this->assertArrayNotHasKey('auth_time', $claims);

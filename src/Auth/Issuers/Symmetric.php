@@ -50,6 +50,8 @@ abstract class Symmetric extends Issuer
      * Generate a cryptographically strong secret suitable for HS256 signing,
      * as a random hex string.
      *
+     * @param  int<1, max>  $bytes
+     *
      * @throws \Exception When sufficient randomness is unavailable.
      */
     public static function generateSecret(int $bytes = 32): string

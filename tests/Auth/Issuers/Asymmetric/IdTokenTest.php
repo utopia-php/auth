@@ -33,7 +33,10 @@ class IdTokenTest extends TestCase
     {
         $json = \base64_decode(\strtr($segment, '-_', '+/'));
 
-        return \json_decode($json, true);
+        /** @var array<string, mixed> $claims */
+        $claims = \json_decode($json, true);
+
+        return $claims;
     }
 
     public function testIssueStructure(): void

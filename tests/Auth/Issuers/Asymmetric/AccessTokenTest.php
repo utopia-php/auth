@@ -29,7 +29,10 @@ class AccessTokenTest extends TestCase
      */
     private function decodeSegment(string $segment): array
     {
-        return \json_decode(\base64_decode(\strtr($segment, '-_', '+/')), true);
+        /** @var array<string, mixed> $claims */
+        $claims = \json_decode(\base64_decode(\strtr($segment, '-_', '+/')), true);
+
+        return $claims;
     }
 
     public function testHeaderType(): void
@@ -60,7 +63,7 @@ class AccessTokenTest extends TestCase
         $this->assertGreaterThanOrEqual($before, $claims['iat']);
         $this->assertLessThanOrEqual($after, $claims['iat']);
         $this->assertEquals($claims['iat'] + 3600, $claims['exp']);
-        $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $claims['jti']);
+        $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', (string) $claims['jti']);
     }
 
     public function testSignatureIsValid(): void

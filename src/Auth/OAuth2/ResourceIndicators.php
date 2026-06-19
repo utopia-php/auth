@@ -72,14 +72,12 @@ class ResourceIndicators
      */
     public static function audience(string $defaultAudience, array $resources): string|array
     {
-        if (empty($resources)) {
-            return $defaultAudience;
-        }
-
         $resourcesWithoutDefault = \array_values(
             \array_filter($resources, fn ($resource) => $resource !== $defaultAudience)
         );
 
-        return \array_values(\array_merge([$defaultAudience], $resourcesWithoutDefault));
+        $audience = \array_values(\array_merge([$defaultAudience], $resourcesWithoutDefault));
+
+        return \count($audience) === 1 ? $audience[0] : $audience;
     }
 }

@@ -83,4 +83,14 @@ class ResourceIndicatorsTest extends TestCase
             ])
         );
     }
+
+    public function testAudienceReturnsStringWhenOnlyDefaultAudienceRemains(): void
+    {
+        $this->assertSame(
+            'https://cloud.appwrite.io/v1/project1',
+            ResourceIndicators::audience('https://cloud.appwrite.io/v1/project1', [
+                'https://cloud.appwrite.io/v1/project1',
+            ])
+        );
+    }
 }

@@ -52,14 +52,6 @@ class ResourceIndicators
         $normalized = [];
 
         foreach ($resources as $resource) {
-            if (!\is_string($resource) || $resource === '') {
-                throw new \InvalidArgumentException('resource must be a non-empty absolute URI.');
-            }
-
-            if (!self::isValid($resource)) {
-                throw new \InvalidArgumentException('resource must be an absolute URI without a fragment.');
-            }
-
             if (!\in_array($resource, $normalized, true)) {
                 $normalized[] = $resource;
             }

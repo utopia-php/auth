@@ -197,7 +197,6 @@ $jwt = $accessToken->issue(
     scopes: ['openid', 'profile', 'email']
 );
 
-// RFC 9068 also allows multiple resource-server audiences.
 $jwt = $accessToken->issue(
     subject: 'user-123',
     audience: ['https://api.example.com', 'https://mcp.example.com'],
@@ -271,7 +270,6 @@ $jwt = $idToken->issue(
 ```php
 <?php
 
-use Utopia\Auth\OAuth2\InvalidResourceException;
 use Utopia\Auth\OAuth2\ResourceIndicators;
 
 $resources = ResourceIndicators::from([
@@ -280,15 +278,10 @@ $resources = ResourceIndicators::from([
 ]);
 $previouslyGrantedResources = ResourceIndicators::from(['https://api.example.com/']);
 
-// Refresh/downscope requests must stay within the previously granted resources.
 $isAllowed = $resources->isSubsetOf($previouslyGrantedResources);
 $unchanged = $resources->equals($previouslyGrantedResources);
-// Falls back to the default only when no resource was requested.
 $audience = $resources->audience('https://cloud.example.com/v1/project');
 $serialized = $resources->toArray();
-
-// Invalid resources throw InvalidResourceException with the RFC 8707 error code:
-// InvalidResourceException::ERROR_CODE === 'invalid_target'
 ```
 
 ## Tests

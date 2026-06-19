@@ -92,7 +92,7 @@ class ResourceIndicators
             \array_filter($this->resources, fn ($resource) => $resource !== $defaultAudience)
         );
 
-        $audience = \array_values(\array_merge([$defaultAudience], $resourcesWithoutDefault));
+        $audience = [$defaultAudience, ...$resourcesWithoutDefault];
 
         return $audience;
     }

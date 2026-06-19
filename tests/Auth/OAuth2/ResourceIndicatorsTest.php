@@ -86,11 +86,11 @@ class ResourceIndicatorsTest extends TestCase
         return [
             'fragment' => [
                 'resources' => 'https://api.example.com/#section',
-                'message' => 'resource must be an absolute URI without a fragment.',
+                'message' => 'resource must be an absolute URI with no fragment component.',
             ],
             'relative URI' => [
                 'resources' => '/relative',
-                'message' => 'resource must be an absolute URI without a fragment.',
+                'message' => 'resource must be an absolute URI with no fragment component.',
             ],
             'non-string' => [
                 'resources' => ['https://api.example.com/', 42],

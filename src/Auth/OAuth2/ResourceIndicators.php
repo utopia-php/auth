@@ -26,7 +26,7 @@ class ResourceIndicators
                     throw new InvalidResourceException('resource must be a non-empty absolute URI.');
 
                 case \is_string($resource) && !self::isValid($resource):
-                    throw new InvalidResourceException('resource must be an absolute URI without a fragment.');
+                    throw new InvalidResourceException('resource must be an absolute URI with no fragment component.');
 
                 case \in_array($resource, $seen, true):
                     throw new InvalidResourceException('resources must not contain duplicates.');

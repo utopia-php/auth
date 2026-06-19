@@ -197,6 +197,16 @@ $jwt = $accessToken->issue(
     scopes: ['openid', 'profile', 'email']
 );
 
+// RFC 9068 also allows multiple resource-server audiences.
+$jwt = $accessToken->issue(
+    subject: 'user-123',
+    audience: ['https://api.example.com', 'https://mcp.example.com'],
+    clientId: 'client-abc',
+    authTime: time(),
+    duration: 3600,
+    scopes: ['openid', 'profile']
+);
+
 // Publish the public key as a JWK so resource servers can verify tokens
 $jwk = $accessToken->getPublicJwk();
 $keyId = $accessToken->getKeyId();
@@ -256,6 +266,23 @@ $jwt = $idToken->issue(
 
 > Both asymmetric and symmetric issuers accept an optional `keyId` constructor argument (the JWS `kid` header) for key rotation. For asymmetric issuers it is derived deterministically from the public key when omitted.
 
+#### OAuth2 Resource Indicators (RFC 8707)
+
+```php
+<?php
+
+use Utopia\Auth\OAuth2\ResourceIndicators;
+
+$resources = ResourceIndicators::normalize([
+    'https://api.example.com/',
+    'https://mcp.example.com/',
+]);
+
+$isAllowed = ResourceIndicators::isSubset($resources, $previouslyGrantedResources);
+$unchanged = ResourceIndicators::sameSet($resources, $previouslyGrantedResources);
+$audience = ResourceIndicators::audience('https://cloud.example.com/v1/project', $resources);
+```
+
 ## Tests
 
 To run all unit tests, use the following Docker command:
@@ -282,4 +309,4 @@ We truly ❤️ pull requests! If you wish to help, you can learn more about how
 
 ## Copyright and license
 
-The MIT License (MIT) [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php) 
+The MIT License (MIT) [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php)

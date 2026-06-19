@@ -68,6 +68,15 @@ class AccessTokenTest extends TestCase
         $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $jti);
     }
 
+    public function testArrayAudience(): void
+    {
+        $audience = ['https://api.example.com', 'https://mcp.example.com'];
+        $token = $this->accessToken->issue('user-123', $audience, 'client-abc', 1000, 3600);
+        $claims = $this->decodeSegment(\explode('.', $token)[1]);
+
+        $this->assertEquals($audience, $claims['aud']);
+    }
+
     public function testSignatureIsValid(): void
     {
         $token = $this->accessToken->issue('user-123', 'https://api.example.com', 'client-abc', 1000, 3600);

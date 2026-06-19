@@ -37,7 +37,7 @@ class AccessTokenTest extends TestCase
 
     public function testHeaderType(): void
     {
-        $token = $this->accessToken->issue('user-123', 'https://api.example.com', 'client-abc', 1000, 3600);
+        $token = $this->accessToken->issue('user-123', ['https://api.example.com'], 'client-abc', 1000, 3600);
         $header = $this->decodeSegment(\explode('.', $token)[0]);
 
         // RFC 9068 §2.1: access tokens carry the "at+jwt" media type.
@@ -49,13 +49,13 @@ class AccessTokenTest extends TestCase
     public function testClaims(): void
     {
         $before = \time();
-        $token = $this->accessToken->issue('user-123', 'https://api.example.com', 'client-abc', 1000, 3600, ['read', 'write']);
+        $token = $this->accessToken->issue('user-123', ['https://api.example.com'], 'client-abc', 1000, 3600, ['read', 'write']);
         $after = \time();
 
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
 
         $this->assertEquals('https://example.com/v1/oauth2/test', $claims['iss']);
-        $this->assertEquals('https://api.example.com', $claims['aud']);
+        $this->assertEquals(['https://api.example.com'], $claims['aud']);
         $this->assertEquals('user-123', $claims['sub']);
         $this->assertEquals('client-abc', $claims['client_id']);
         $this->assertEquals('read write', $claims['scope']);
@@ -68,9 +68,26 @@ class AccessTokenTest extends TestCase
         $this->assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $jti);
     }
 
+    public function testAudienceClaim(): void
+    {
+        $audience = ['https://api.example.com', 'https://mcp.example.com'];
+        $token = $this->accessToken->issue('user-123', $audience, 'client-abc', 1000, 3600);
+        $claims = $this->decodeSegment(\explode('.', $token)[1]);
+
+        $this->assertEquals($audience, $claims['aud']);
+    }
+
+    public function testEmptyAudienceIsRejected(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('audience must contain at least one resource server identifier.');
+
+        $this->accessToken->issue('user-123', [], 'client-abc', 1000, 3600);
+    }
+
     public function testSignatureIsValid(): void
     {
-        $token = $this->accessToken->issue('user-123', 'https://api.example.com', 'client-abc', 1000, 3600);
+        $token = $this->accessToken->issue('user-123', ['https://api.example.com'], 'client-abc', 1000, 3600);
 
         $parts = \explode('.', $token);
         $result = \openssl_verify(
@@ -85,7 +102,7 @@ class AccessTokenTest extends TestCase
 
     public function testScopeOmittedWhenEmpty(): void
     {
-        $token = $this->accessToken->issue('user-123', 'https://api.example.com', 'client-abc', 1000, 3600);
+        $token = $this->accessToken->issue('user-123', ['https://api.example.com'], 'client-abc', 1000, 3600);
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
 
         $this->assertArrayNotHasKey('scope', $claims);
@@ -93,7 +110,7 @@ class AccessTokenTest extends TestCase
 
     public function testScopeCannotBeInjectedViaClaimsWhenEmpty(): void
     {
-        $token = $this->accessToken->issue('user-123', 'https://api.example.com', 'client-abc', 1000, 3600, [], null, [
+        $token = $this->accessToken->issue('user-123', ['https://api.example.com'], 'client-abc', 1000, 3600, [], null, [
             'scope' => 'admin',
         ]);
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
@@ -103,7 +120,7 @@ class AccessTokenTest extends TestCase
 
     public function testScopeCannotBeOverriddenViaClaims(): void
     {
-        $token = $this->accessToken->issue('user-123', 'https://api.example.com', 'client-abc', 1000, 3600, ['read'], null, [
+        $token = $this->accessToken->issue('user-123', ['https://api.example.com'], 'client-abc', 1000, 3600, ['read'], null, [
             'scope' => 'admin',
         ]);
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
@@ -113,15 +130,15 @@ class AccessTokenTest extends TestCase
 
     public function testJtiIsGeneratedAndUnique(): void
     {
-        $first = $this->decodeSegment(\explode('.', $this->accessToken->issue('user-123', 'aud', 'client', 1000, 3600))[1]);
-        $second = $this->decodeSegment(\explode('.', $this->accessToken->issue('user-123', 'aud', 'client', 1000, 3600))[1]);
+        $first = $this->decodeSegment(\explode('.', $this->accessToken->issue('user-123', ['aud'], 'client', 1000, 3600))[1]);
+        $second = $this->decodeSegment(\explode('.', $this->accessToken->issue('user-123', ['aud'], 'client', 1000, 3600))[1]);
 
         $this->assertNotEquals($first['jti'], $second['jti']);
     }
 
     public function testCustomJti(): void
     {
-        $token = $this->accessToken->issue('user-123', 'aud', 'client', 1000, 3600, [], 'fixed-jti');
+        $token = $this->accessToken->issue('user-123', ['aud'], 'client', 1000, 3600, [], 'fixed-jti');
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
 
         $this->assertEquals('fixed-jti', $claims['jti']);
@@ -129,7 +146,7 @@ class AccessTokenTest extends TestCase
 
     public function testAdditionalClaims(): void
     {
-        $token = $this->accessToken->issue('user-123', 'aud', 'client', 1000, 3600, [], null, [
+        $token = $this->accessToken->issue('user-123', ['aud'], 'client', 1000, 3600, [], null, [
             'tokenId' => 'identity-row-1',
         ]);
         $claims = $this->decodeSegment(\explode('.', $token)[1]);
@@ -139,7 +156,7 @@ class AccessTokenTest extends TestCase
 
     public function testAdditionalClaimsCannotOverrideRegisteredClaims(): void
     {
-        $token = $this->accessToken->issue('user-123', 'aud', 'client', 1000, 3600, [], null, [
+        $token = $this->accessToken->issue('user-123', ['aud'], 'client', 1000, 3600, [], null, [
             'sub' => 'attacker',
             'iss' => 'https://evil.example.com',
             'client_id' => 'evil',

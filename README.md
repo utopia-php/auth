@@ -190,11 +190,20 @@ $accessToken = new AccessToken(
 // Issue a signed RS256 access token
 $jwt = $accessToken->issue(
     subject: 'user-123',                  // "sub" — the resource owner
-    audience: 'https://api.example.com',  // "aud" — the resource server
+    audience: ['https://api.example.com'], // "aud" — the resource server
     clientId: 'client-abc',               // "client_id" — the client it was issued to
     authTime: time(),                     // "auth_time" — when the user authenticated
     duration: 3600,                       // Lifetime in seconds ("exp")
     scopes: ['openid', 'profile', 'email']
+);
+
+$jwt = $accessToken->issue(
+    subject: 'user-123',
+    audience: ['https://api.example.com', 'https://mcp.example.com'],
+    clientId: 'client-abc',
+    authTime: time(),
+    duration: 3600,
+    scopes: ['openid', 'profile']
 );
 
 // Publish the public key as a JWK so resource servers can verify tokens
@@ -256,6 +265,25 @@ $jwt = $idToken->issue(
 
 > Both asymmetric and symmetric issuers accept an optional `keyId` constructor argument (the JWS `kid` header) for key rotation. For asymmetric issuers it is derived deterministically from the public key when omitted.
 
+#### OAuth2 Resource Indicators (RFC 8707)
+
+```php
+<?php
+
+use Utopia\Auth\OAuth2\ResourceIndicators;
+
+$resources = ResourceIndicators::from([
+    'https://api.example.com/',
+    'https://mcp.example.com/',
+]);
+$previouslyGrantedResources = ResourceIndicators::from(['https://api.example.com/']);
+
+$isAllowed = $resources->isSubsetOf($previouslyGrantedResources);
+$unchanged = $resources->equals($previouslyGrantedResources);
+$audience = $resources->audience('https://cloud.example.com/v1/project');
+$serialized = $resources->toArray();
+```
+
 ## Tests
 
 To run all unit tests, use the following Docker command:
@@ -264,10 +292,10 @@ To run all unit tests, use the following Docker command:
 docker compose exec tests vendor/bin/phpunit --configuration phpunit.xml tests
 ```
 
-To run static code analysis, use the following Psalm command:
+To run static code analysis, use the following command:
 
 ```bash
-docker compose exec tests vendor/bin/psalm --show-info=true
+docker compose exec tests composer check
 ```
 
 ## Security
@@ -282,4 +310,4 @@ We truly ❤️ pull requests! If you wish to help, you can learn more about how
 
 ## Copyright and license
 
-The MIT License (MIT) [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php) 
+The MIT License (MIT) [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php)

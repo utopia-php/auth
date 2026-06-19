@@ -22,7 +22,7 @@
         }
     },
     "scripts": {
-        "check": "./vendor/bin/phpstan analyse --level max src tests",
+        "check": "./vendor/bin/phpstan analyse --level max --memory-limit=1G src tests",
         "lint": "./vendor/bin/pint --config pint.json --test",
         "format": "./vendor/bin/pint --config pint.json"
     },
@@ -35,8 +35,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.3",
-        "vimeo/psalm": "4.0.1",
-        "laravel/pint": "1.2.*",
-        "phpstan/phpstan": "1.9.x-dev"
+        "laravel/pint": "^1.29",
+        "phpstan/phpstan": "^1.12"
     }
-} 
+}

@@ -273,14 +273,16 @@ $jwt = $idToken->issue(
 
 use Utopia\Auth\OAuth2\ResourceIndicators;
 
-$resources = ResourceIndicators::normalize([
+$resources = ResourceIndicators::from([
     'https://api.example.com/',
     'https://mcp.example.com/',
 ]);
+$previouslyGrantedResources = ResourceIndicators::from(['https://api.example.com/']);
 
-$isAllowed = ResourceIndicators::isSubset($resources, $previouslyGrantedResources);
-$unchanged = ResourceIndicators::sameSet($resources, $previouslyGrantedResources);
-$audience = ResourceIndicators::audience('https://cloud.example.com/v1/project', $resources);
+$isAllowed = $resources->isSubsetOf($previouslyGrantedResources);
+$unchanged = $resources->equals($previouslyGrantedResources);
+$audience = $resources->audience('https://cloud.example.com/v1/project');
+$serialized = $resources->toArray();
 ```
 
 ## Tests

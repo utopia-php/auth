@@ -5,12 +5,25 @@ namespace Utopia\Auth\OAuth2;
 class ResourceIndicators
 {
     /**
-     * @return array<int, string>
+     * @var array<int, string>
      */
-    public static function normalize(mixed $value): array
+    private array $resources;
+
+    /**
+     * @param array<int, string> $resources
+     */
+    private function __construct(array $resources)
+    {
+        $this->resources = $resources;
+    }
+
+    /**
+     * @param string|array<int, mixed>|null $value
+     */
+    public static function from(string|array|null $value): self
     {
         if ($value === null || $value === '') {
-            return [];
+            return new self([]);
         }
 
         $resources = \is_array($value) ? $value : [$value];
@@ -30,10 +43,47 @@ class ResourceIndicators
             }
         }
 
-        return $normalized;
+        return new self($normalized);
     }
 
-    public static function isValid(string $resource): bool
+    public function isSubsetOf(self $granted): bool
+    {
+        return empty(\array_diff($this->resources, $granted->resources));
+    }
+
+    public function equals(self $resources): bool
+    {
+        $left = $this->resources;
+        $right = $resources->resources;
+        \sort($left, \SORT_STRING);
+        \sort($right, \SORT_STRING);
+
+        return $left === $right;
+    }
+
+    /**
+     * @return string|array<int, string>
+     */
+    public function audience(string $defaultAudience): string|array
+    {
+        $resourcesWithoutDefault = \array_values(
+            \array_filter($this->resources, fn ($resource) => $resource !== $defaultAudience)
+        );
+
+        $audience = \array_values(\array_merge([$defaultAudience], $resourcesWithoutDefault));
+
+        return \count($audience) === 1 ? $audience[0] : $audience;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function toArray(): array
+    {
+        return $this->resources;
+    }
+
+    private static function isValid(string $resource): bool
     {
         $parts = \parse_url($resource);
 
@@ -41,43 +91,5 @@ class ResourceIndicators
             && !empty($parts['scheme'])
             && !isset($parts['fragment'])
             && (!empty($parts['host']) || !empty($parts['path']));
-    }
-
-    /**
-     * @param array<int, string> $requested
-     * @param array<int, string> $granted
-     */
-    public static function isSubset(array $requested, array $granted): bool
-    {
-        return empty(\array_diff($requested, $granted));
-    }
-
-    /**
-     * @param array<int, string> $left
-     * @param array<int, string> $right
-     */
-    public static function sameSet(array $left, array $right): bool
-    {
-        $sortedLeft = $left;
-        $sortedRight = $right;
-        \sort($sortedLeft, \SORT_STRING);
-        \sort($sortedRight, \SORT_STRING);
-
-        return $sortedLeft === $sortedRight;
-    }
-
-    /**
-     * @param array<int, string> $resources
-     * @return string|array<int, string>
-     */
-    public static function audience(string $defaultAudience, array $resources): string|array
-    {
-        $resourcesWithoutDefault = \array_values(
-            \array_filter($resources, fn ($resource) => $resource !== $defaultAudience)
-        );
-
-        $audience = \array_values(\array_merge([$defaultAudience], $resourcesWithoutDefault));
-
-        return \count($audience) === 1 ? $audience[0] : $audience;
     }
 }

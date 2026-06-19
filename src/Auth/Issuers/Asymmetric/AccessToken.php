@@ -34,7 +34,7 @@ class AccessToken extends Asymmetric
      * authorization server, supplied to the constructor).
      *
      * @param  string  $subject  The "sub" claim (the resource owner / user).
-     * @param  string|array<int, string>  $audience  The "aud" claim (the resource server identifier).
+     * @param  array<int, string>  $audience  The "aud" claim (the resource server identifiers).
      * @param  string  $clientId  The "client_id" claim (the client the token was issued to).
      * @param  int  $authTime  Time the end-user authenticated ("auth_time"), as a Unix timestamp.
      * @param  int  $duration  Lifetime of the token in seconds (used for "exp").
@@ -46,7 +46,7 @@ class AccessToken extends Asymmetric
      */
     public function issue(
         string $subject,
-        string|array $audience,
+        array $audience,
         string $clientId,
         int $authTime,
         int $duration,

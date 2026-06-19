@@ -190,7 +190,7 @@ $accessToken = new AccessToken(
 // Issue a signed RS256 access token
 $jwt = $accessToken->issue(
     subject: 'user-123',                  // "sub" — the resource owner
-    audience: 'https://api.example.com',  // "aud" — the resource server
+    audience: ['https://api.example.com'], // "aud" — the resource server
     clientId: 'client-abc',               // "client_id" — the client it was issued to
     authTime: time(),                     // "auth_time" — when the user authenticated
     duration: 3600,                       // Lifetime in seconds ("exp")

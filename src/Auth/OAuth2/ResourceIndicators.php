@@ -14,6 +14,28 @@ class ResourceIndicators
      */
     private function __construct(array $resources)
     {
+        if ($resources !== \array_values($resources)) {
+            throw new \InvalidArgumentException('resources must be a list of absolute URIs.');
+        }
+
+        $seen = [];
+
+        foreach ($resources as $resource) {
+            if (!\is_string($resource) || $resource === '') {
+                throw new \InvalidArgumentException('resource must be a non-empty absolute URI.');
+            }
+
+            if (!self::isValid($resource)) {
+                throw new \InvalidArgumentException('resource must be an absolute URI without a fragment.');
+            }
+
+            if (\in_array($resource, $seen, true)) {
+                throw new \InvalidArgumentException('resources must not contain duplicates.');
+            }
+
+            $seen[] = $resource;
+        }
+
         $this->resources = $resources;
     }
 
@@ -62,9 +84,9 @@ class ResourceIndicators
     }
 
     /**
-     * @return string|array<int, string>
+     * @return array<int, string>
      */
-    public function audience(string $defaultAudience): string|array
+    public function audience(string $defaultAudience): array
     {
         $resourcesWithoutDefault = \array_values(
             \array_filter($this->resources, fn ($resource) => $resource !== $defaultAudience)
@@ -72,7 +94,7 @@ class ResourceIndicators
 
         $audience = \array_values(\array_merge([$defaultAudience], $resourcesWithoutDefault));
 
-        return \count($audience) === 1 ? $audience[0] : $audience;
+        return $audience;
     }
 
     /**

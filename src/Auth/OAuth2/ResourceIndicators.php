@@ -10,7 +10,7 @@ class ResourceIndicators
     private array $resources;
 
     /**
-     * @param array<int, string> $resources
+     * @param array<int, mixed> $resources
      */
     private function __construct(array $resources)
     {
@@ -35,6 +35,7 @@ class ResourceIndicators
             $seen[] = $resource;
         }
 
+        /** @var array<int, string> $resources */
         $this->resources = $resources;
     }
 

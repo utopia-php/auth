@@ -61,6 +61,10 @@ class ResourceIndicators
         return new self($normalized);
     }
 
+    /**
+     * Requested resources must be a subset of previously granted resources;
+     * use this on refresh and token requests per RFC 8707 Section 2.2.
+     */
     public function isSubsetOf(self $granted): bool
     {
         return empty(\array_diff($this->resources, $granted->resources));

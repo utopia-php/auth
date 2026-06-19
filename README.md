@@ -280,6 +280,7 @@ $resources = ResourceIndicators::from([
 ]);
 $previouslyGrantedResources = ResourceIndicators::from(['https://api.example.com/']);
 
+// Refresh/downscope requests must stay within the previously granted resources.
 $isAllowed = $resources->isSubsetOf($previouslyGrantedResources);
 $unchanged = $resources->equals($previouslyGrantedResources);
 // Falls back to the default only when no resource was requested.

@@ -88,13 +88,11 @@ class ResourceIndicators
      */
     public function audience(string $defaultAudience): array
     {
-        $resourcesWithoutDefault = \array_values(
-            \array_filter($this->resources, fn ($resource) => $resource !== $defaultAudience)
-        );
+        if ($this->resources === []) {
+            return [$defaultAudience];
+        }
 
-        $audience = [$defaultAudience, ...$resourcesWithoutDefault];
-
-        return $audience;
+        return $this->resources;
     }
 
     /**

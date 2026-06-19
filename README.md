@@ -281,6 +281,7 @@ $previouslyGrantedResources = ResourceIndicators::from(['https://api.example.com
 
 $isAllowed = $resources->isSubsetOf($previouslyGrantedResources);
 $unchanged = $resources->equals($previouslyGrantedResources);
+// Falls back to the default only when no resource was requested.
 $audience = $resources->audience('https://cloud.example.com/v1/project');
 $serialized = $resources->toArray();
 ```

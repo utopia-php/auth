@@ -61,10 +61,9 @@ class ResourceIndicatorsTest extends TestCase
         );
 
         $this->assertSame(
-            ['https://cloud.appwrite.io/v1/project1', 'https://mcp.example.com/'],
+            ['https://mcp.example.com/'],
             ResourceIndicators::from([
                 'https://mcp.example.com/',
-                'https://cloud.appwrite.io/v1/project1',
             ])->audience('https://cloud.appwrite.io/v1/project1')
         );
 

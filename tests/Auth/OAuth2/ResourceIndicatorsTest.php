@@ -3,6 +3,7 @@
 namespace Utopia\Tests\Auth\OAuth2;
 
 use PHPUnit\Framework\TestCase;
+use Utopia\Auth\OAuth2\InvalidResourceException;
 use Utopia\Auth\OAuth2\ResourceIndicators;
 
 class ResourceIndicatorsTest extends TestCase
@@ -30,7 +31,9 @@ class ResourceIndicatorsTest extends TestCase
      */
     public function testRejectsInvalidResources(string|array $resources, string $message): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->assertSame('invalid_target', InvalidResourceException::ERROR_CODE);
+
+        $this->expectException(InvalidResourceException::class);
         $this->expectExceptionMessage($message);
 
         ResourceIndicators::from($resources);

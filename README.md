@@ -271,6 +271,7 @@ $jwt = $idToken->issue(
 ```php
 <?php
 
+use Utopia\Auth\OAuth2\InvalidResourceException;
 use Utopia\Auth\OAuth2\ResourceIndicators;
 
 $resources = ResourceIndicators::from([
@@ -284,6 +285,9 @@ $unchanged = $resources->equals($previouslyGrantedResources);
 // Falls back to the default only when no resource was requested.
 $audience = $resources->audience('https://cloud.example.com/v1/project');
 $serialized = $resources->toArray();
+
+// Invalid resources throw InvalidResourceException with the RFC 8707 error code:
+// InvalidResourceException::ERROR_CODE === 'invalid_target'
 ```
 
 ## Tests

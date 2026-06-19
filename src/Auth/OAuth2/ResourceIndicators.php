@@ -15,22 +15,21 @@ class ResourceIndicators
     private function __construct(array $resources)
     {
         if ($resources !== \array_values($resources)) {
-            throw new \InvalidArgumentException('resources must be a list of absolute URIs.');
+            throw new InvalidResourceException('resources must be a list of absolute URIs.');
         }
 
         $seen = [];
 
         foreach ($resources as $resource) {
-            if (!\is_string($resource) || $resource === '') {
-                throw new \InvalidArgumentException('resource must be a non-empty absolute URI.');
-            }
+            switch (true) {
+                case !\is_string($resource) || $resource === '':
+                    throw new InvalidResourceException('resource must be a non-empty absolute URI.');
 
-            if (!self::isValid($resource)) {
-                throw new \InvalidArgumentException('resource must be an absolute URI without a fragment.');
-            }
+                case \is_string($resource) && !self::isValid($resource):
+                    throw new InvalidResourceException('resource must be an absolute URI without a fragment.');
 
-            if (\in_array($resource, $seen, true)) {
-                throw new \InvalidArgumentException('resources must not contain duplicates.');
+                case \in_array($resource, $seen, true):
+                    throw new InvalidResourceException('resources must not contain duplicates.');
             }
 
             $seen[] = $resource;
@@ -41,6 +40,8 @@ class ResourceIndicators
 
     /**
      * @param string|array<int, mixed>|null $value
+     *
+     * @throws InvalidResourceException
      */
     public static function from(string|array|null $value): self
     {

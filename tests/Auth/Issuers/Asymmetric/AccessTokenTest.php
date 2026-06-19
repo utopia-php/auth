@@ -77,6 +77,14 @@ class AccessTokenTest extends TestCase
         $this->assertEquals($audience, $claims['aud']);
     }
 
+    public function testEmptyAudienceIsRejected(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('audience must contain at least one resource server identifier.');
+
+        $this->accessToken->issue('user-123', [], 'client-abc', 1000, 3600);
+    }
+
     public function testSignatureIsValid(): void
     {
         $token = $this->accessToken->issue('user-123', ['https://api.example.com'], 'client-abc', 1000, 3600);

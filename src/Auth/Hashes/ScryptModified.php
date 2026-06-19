@@ -71,6 +71,9 @@ class ScryptModified extends Hash
 
         $value = \mb_convert_encoding($value, 'UTF-8');
         $derivedKey = \scrypt($value, $saltBytes.$saltSeparatorBytes, 16384, 8, 1, 64);
+        if ($derivedKey === false) {
+            throw new \RuntimeException('Failed to generate derived key using scrypt');
+        }
 
         $result = \hex2bin($derivedKey);
         if ($result === false) {
@@ -87,10 +90,6 @@ class ScryptModified extends Hash
      */
     private function hashKeys(string $signerKeyBytes, string $derivedKeyBytes): string
     {
-        if (! is_string($signerKeyBytes)) {
-            throw new \InvalidArgumentException('Signer key must be a string');
-        }
-
         $key = \substr($derivedKeyBytes, 0, 32);
         $iv = "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 

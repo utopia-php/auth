@@ -54,6 +54,20 @@ class AccessToken extends Asymmetric
         ?string $jti = null,
         array $claims = [],
     ): string {
+        if ($audience === []) {
+            throw new \InvalidArgumentException('audience must contain at least one resource server identifier.');
+        }
+
+        if ($audience !== \array_values($audience)) {
+            throw new \InvalidArgumentException('audience must be a list of resource server identifiers.');
+        }
+
+        foreach ($audience as $identifier) {
+            if (!\is_string($identifier) || $identifier === '') {
+                throw new \InvalidArgumentException('audience must contain non-empty resource server identifiers.');
+            }
+        }
+
         $now = \time();
 
         // "scope" is issuer-controlled; drop any caller-supplied value so it

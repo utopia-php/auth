@@ -28,14 +28,34 @@ class Scrypt extends Hash
             throw new \RuntimeException('The scrypt extension is required. Please install php-scrypt.');
         }
 
-        return \scrypt(
+        $salt = $this->getOption('salt');
+        $costCpu = $this->getOption('costCpu');
+        $costMemory = $this->getOption('costMemory');
+        $costParallel = $this->getOption('costParallel');
+        $length = $this->getOption('length');
+
+        if (! \is_string($salt)) {
+            throw new \InvalidArgumentException('Salt must be a string');
+        }
+
+        if (! \is_int($costCpu) || ! \is_int($costMemory) || ! \is_int($costParallel) || ! \is_int($length)) {
+            throw new \InvalidArgumentException('Scrypt cost and length options must be integers');
+        }
+
+        $hash = \scrypt(
             $value,
-            $this->getOption('salt'),
-            $this->getOption('costCpu'),
-            $this->getOption('costMemory'),
-            $this->getOption('costParallel'),
-            $this->getOption('length')
+            $salt,
+            $costCpu,
+            $costMemory,
+            $costParallel,
+            $length
         );
+
+        if ($hash === false) {
+            throw new \RuntimeException('Failed to hash using scrypt');
+        }
+
+        return $hash;
     }
 
     /**

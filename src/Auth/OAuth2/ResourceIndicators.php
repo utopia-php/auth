@@ -14,7 +14,7 @@ class ResourceIndicators
      */
     private function __construct(array $resources)
     {
-        if ($resources !== \array_values($resources)) {
+        if ($resources !== array_values($resources)) {
             throw new InvalidResourceException('resources must be a list of absolute URIs.');
         }
 
@@ -26,7 +26,7 @@ class ResourceIndicators
                     throw new InvalidResourceException('resource must be a non-empty absolute URI.');
 
                 case \is_string($resource) && !self::isValid($resource):
-                    throw new InvalidResourceException('resource must be an absolute URI with no fragment component.');
+                    throw new InvalidResourceException('resource must be an absolute HTTP(S) URI with no fragment component.');
 
                 case \in_array($resource, $seen, true):
                     throw new InvalidResourceException('resources must not contain duplicates.');
@@ -68,15 +68,15 @@ class ResourceIndicators
      */
     public function isSubsetOf(self $granted): bool
     {
-        return empty(\array_diff($this->resources, $granted->resources));
+        return empty(array_diff($this->resources, $granted->resources));
     }
 
     public function equals(self $resources): bool
     {
         $left = $this->resources;
         $right = $resources->resources;
-        \sort($left, \SORT_STRING);
-        \sort($right, \SORT_STRING);
+        sort($left, \SORT_STRING);
+        sort($right, \SORT_STRING);
 
         return $left === $right;
     }
@@ -103,11 +103,12 @@ class ResourceIndicators
 
     private static function isValid(string $resource): bool
     {
-        $parts = \parse_url($resource);
+        $parts = parse_url($resource);
 
         return \is_array($parts)
-            && !empty($parts['scheme'])
+            && isset($parts['scheme'])
+            && \in_array(strtolower($parts['scheme']), ['http', 'https'], true)
             && !isset($parts['fragment'])
-            && (!empty($parts['host']) || !empty($parts['path']));
+            && !empty($parts['host']);
     }
 }

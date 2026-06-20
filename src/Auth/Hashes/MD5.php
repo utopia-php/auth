@@ -19,7 +19,7 @@ class MD5 extends Hash
      */
     public function hash(string $value): string
     {
-        return \md5($value);
+        return md5($value);
     }
 
     /**
@@ -27,7 +27,7 @@ class MD5 extends Hash
      */
     public function verify(string $value, string $hash): bool
     {
-        return $this->hash($value) === $hash;
+        return hash_equals($hash, $this->hash($value));
     }
 
     /**
